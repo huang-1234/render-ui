@@ -1,0 +1,50 @@
+{
+  "name": "hybirdrn",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "web": "webpack serve --config webpack.config.js"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-native": "0.81.1",
+    "react-native-svg": "^15.12.1",
+    "react-native-web": "^0.21.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@react-native-community/cli": "^20.0.1",
+    "@react-native/metro-config": "^0.81.1",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/react": "18.3.1",
+    "@types/react-native": "^0.73.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-react-native-web": "^0.21.1",
+    "html-webpack-plugin": "^5.6.4",
+    "jsdom": "^26.1.0",
+    "metro-react-native-babel-preset": "^0.77.0",
+    "rollup": "^4.9.6",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "5.8.3",
+    "vitest": "2.1.5",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
