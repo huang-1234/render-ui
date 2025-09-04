@@ -33,3 +33,21 @@ export type { SideBarProps, MenuItem } from './SideBar';
 
 export { default as Svg, Path, Circle, Rect, Line, Ellipse, Polygon, Polyline, G, Text as SvgText } from './Svg';
 export type { SvgProps } from './Svg';
+
+export { default as Input } from './Input';
+export type { InputProps, InputRef } from './Input';
+
+export { default as Picker } from './Picker';
+export type { PickerProps, PickerOption } from './Picker';
+
+export { default as Modal } from './Modal';
+export type { ModalProps, ModalPosition } from './Modal';
+
+export { default as Swiper } from './Swiper';
+export type { SwiperProps, SwiperItem } from './Swiper';
+
+export { default as PullRefresh } from './PullRefresh';
+export type { PullRefreshProps } from './PullRefresh';
+
+export { default as InfiniteScroll } from './InfiniteScroll';
+export type { InfiniteScrollProps } from './InfiniteScroll';

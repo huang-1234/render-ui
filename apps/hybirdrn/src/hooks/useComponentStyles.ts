@@ -6,7 +6,7 @@ import { defaultButtonStyles } from '../components/Button/style';
 import { defaultTabsStyles } from '../components/Tabs/style';
 import { theme } from '../styles/theme';
 
-type ComponentName = 'Box' | 'Text' | 'Button' | 'Tabs' | 'Icon' | 'Typography' | 'Divider' | 'Grid' | 'Tag' | 'Card' | 'SideBar' | 'Svg' | 'VirtualList';
+type ComponentName = 'Box' | 'Text' | 'Button' | 'Tabs' | 'Icon' | 'Typography' | 'Divider' | 'Grid' | 'Tag' | 'Card' | 'SideBar' | 'Svg' | 'VirtualList' | 'Input' | 'Picker' | 'Modal' | 'Swiper' | 'PullRefresh' | 'InfiniteScroll';
 
 type ComponentStyles = {
   [key in ComponentName]: Record<string, any>;
@@ -60,6 +60,28 @@ export const useComponentStyles = <T>(componentName: ComponentName, style?: Styl
         justifyContent: 'center',
       },
       VirtualList: {
+        flex: 1,
+        width: '100%',
+      },
+      Input: {
+        width: '100%',
+      },
+      Picker: {
+        width: '100%',
+      },
+      Modal: {
+        position: 'absolute',
+        zIndex: 1000,
+      },
+      Swiper: {
+        width: '100%',
+        height: 200,
+      },
+      PullRefresh: {
+        flex: 1,
+        width: '100%',
+      },
+      InfiniteScroll: {
         flex: 1,
         width: '100%',
       },
