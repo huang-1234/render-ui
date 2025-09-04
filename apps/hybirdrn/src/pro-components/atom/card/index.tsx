@@ -1,17 +1,34 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { StyleSheet, Text, View } from '@kds/web';
-import { go, rem } from '@kds/web-api';
-
-import { Button } from '@kds/web-ui';
-import type { ICommonPrice } from '@es/kprom-common-price-v2';
-import type { IGoodsCard } from '../styles/card';
-import { Price } from '@es/kprom-common-price-v2';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+// import { go, rem } from '@cp/core';
 import React from 'react';
-import { ShelfButtons } from '../Buttons';
-import { TinyImage } from '@/native'
-import request from '@/request';
-import weblog from '@/logger';
+import { Image as TinyImage } from 'react-native'
 
+function go(url: string) {
+  window.location.href = url;
+}
+function rem(value: number) {
+  const baseFontSize = 12;
+  const baseWidth = 414;
+  return value * baseFontSize / baseWidth;
+}
+export function Price(props: any) {
+  return <View>
+    {props.children}
+  </View>
+}
+
+export interface ICommonPrice {
+  priceSuffixLabel: React.ReactNode;
+}
+
+export interface IGoodsCard {
+  goodsId: number;
+  goodsName: string;
+  goodsImage: string;
+  goodsPrice: number;
+  goodsSoldCount: number;
+}
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -43,6 +60,7 @@ const styles = StyleSheet.create({
     color: 'rgba(26, 31, 40, 1)',
     lineHeight: rem(21),
     textAlign: 'left',
+    // @ts-ignore
     numberOfLines: 1,
     ellipsizeMode: 'tail',
   },
@@ -149,7 +167,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// 原子组件：商品图片
 interface ProductImageProps {
   /**
    * @desc 图片URL
@@ -197,7 +214,7 @@ export const ProductImage = (props: ProductImageProps) => {
     onPress = () => {},
   } = props;
   return (
-    <View onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <TinyImage
         source={{ uri: imageUrl }}
         style={[
@@ -211,7 +228,7 @@ export const ProductImage = (props: ProductImageProps) => {
         ]}
         resizeMode={resizeMode || 'cover'}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -312,8 +329,6 @@ export const SellingPointHighlight = (props: SellingPointHighlightProps) => {
     </View>
   );
 };
-
-// 原子组件：佣金信息
 interface CommissionInfoProps {
   rate: number;
   text: string;
@@ -484,7 +499,7 @@ interface ActionButtonProps {
 
 export const ActionButton = (props: ActionButtonProps) => {
   const {
-    text = '加入货架',
+    text = '加入',
     onPress = () => {},
     disabled = false,
     type = 'primary',
@@ -496,20 +511,10 @@ export const ActionButton = (props: ActionButtonProps) => {
   return (
     <View style={[styles.addToShelfButton, { width: rem(width), height: rem(height) }]}>
       <Button
-        type={type}
-        size={size}
-        ghost={ghost}
+        title={text}
         disabled={disabled}
         onPress={onPress}
-        style={{
-          minWidth: rem(50),
-          borderTopLeftRadius: rem(4),
-          borderTopRightRadius: rem(4),
-          borderBottomLeftRadius: rem(4),
-          borderBottomRightRadius: rem(4),
-        }}
       >
-        {text}
       </Button>
     </View>
   );
@@ -521,7 +526,7 @@ export const ActionButton = (props: ActionButtonProps) => {
  */
 export interface ProductCardProps {
   /**
-   * @desc 商品数据、主要用于货架按钮
+   * @desc 商品数据、主要用于按钮
    */
   goodsData?: IGoodsCard;
   /**
@@ -631,7 +636,7 @@ export function CardGoods(props: ProductCardProps) {
     commissionRate = 22.86,
     commissionText = '10%佣金',
     aiRecoReason = '-',
-    buttonText = '加入货架',
+    buttonText = '加入',
     onButtonPress = () => {},
     containerWidth = 0,
     containerHeight = 116,
@@ -692,12 +697,7 @@ export function CardGoods(props: ProductCardProps) {
 
           <View style={styles.bottomSection}>
             <PriceInfo price={salePrice} soldCount={soldCount} />
-            <ShelfButtons
-              weblog={weblog}
-              request={request}
-              goodsData={goodsData}
-              relItemId={relItemId}
-            ></ShelfButtons>
+            <Button title={buttonText} onPress={onButtonPress} />
           </View>
         </View>
       </View>

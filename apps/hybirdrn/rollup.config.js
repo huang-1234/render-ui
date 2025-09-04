@@ -24,7 +24,12 @@ export default {
       // 为 Web 构建时，将 react-native 替换为 react-native-web
       preferBuiltins: false,
       browser: true,
-      dedupe: ['react-native', 'react', 'react-dom']
+      dedupe: ['react-native', 'react', 'react-dom'],
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@components': resolve(__dirname, 'src/components'),
+        '@cp/core': resolve(__dirname, '../../packages/core'),
+      }
     }),
     commonjs(),
     typescript({ tsconfig: './tsconfig.json' }),

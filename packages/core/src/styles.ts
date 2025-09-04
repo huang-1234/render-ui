@@ -4,7 +4,7 @@ import { Platform, getCurrentRuntime } from './runtime';
 export type StyleValue = string | number;
 
 // 样式对象类型
-export type StyleObject = Record<string, StyleValue | StyleObject>;
+export type StyleObject = Record<string, StyleValue>;
 
 // 平台特定样式
 export type PlatformStyles<T extends StyleObject> = {
@@ -197,7 +197,7 @@ export class StyleManager {
   // 合并主题
   private mergeTheme(base: ThemeVariables, override: Partial<ThemeVariables>): ThemeVariables {
     const merged = { ...base };
-    
+
     Object.keys(override).forEach(key => {
       const value = override[key as keyof ThemeVariables];
       if (value && typeof value === 'object' && !Array.isArray(value)) {
@@ -209,7 +209,7 @@ export class StyleManager {
         (merged as any)[key] = value;
       }
     });
-    
+
     return merged;
   }
 
@@ -219,7 +219,7 @@ export class StyleManager {
     componentName?: string
   ): T {
     const cacheKey = componentName || JSON.stringify(styles);
-    
+
     if (this.styleCache.has(cacheKey)) {
       return this.styleCache.get(cacheKey);
     }
@@ -235,10 +235,10 @@ export class StyleManager {
 
     // 适配样式
     const adaptedStyles = this.adaptStyles(processedStyles);
-    
+
     // 缓存样式
     this.styleCache.set(cacheKey, adaptedStyles);
-    
+
     return adaptedStyles;
   }
 
@@ -256,7 +256,7 @@ export class StyleManager {
   ): T {
     const defaultStyles = platformStyles.default || ({} as T);
     const platformSpecific = platformStyles[this.platform] || {};
-    
+
     return {
       ...defaultStyles,
       ...platformSpecific
@@ -269,11 +269,11 @@ export class StyleManager {
 
     Object.keys(adapted).forEach(key => {
       const value = adapted[key];
-      
+
       if (typeof value === 'object' && value !== null) {
-        adapted[key] = this.adaptStyles(value as StyleObject) as any;
+        adapted[key as keyof T] = this.adaptStyles(value as StyleObject) as any;
       } else {
-        adapted[key] = this.adaptStyleValue(key, value as StyleValue) as any;
+        adapted[key as keyof T] = this.adaptStyleValue(key, value as StyleValue) as any;
       }
     });
 
@@ -293,7 +293,7 @@ export class StyleManager {
       if (value.startsWith('$')) {
         return this.resolveThemeVariable(value);
       }
-      
+
       // 单位转换
       const numericValue = parseFloat(value);
       if (!isNaN(numericValue) && value.endsWith('px')) {
@@ -336,7 +336,7 @@ export class StyleManager {
       'borderRadius', 'borderWidth',
       'fontSize', 'lineHeight'
     ];
-    
+
     return rpxProperties.includes(property);
   }
 
@@ -344,7 +344,7 @@ export class StyleManager {
   private resolveThemeVariable(variable: string): StyleValue {
     const path = variable.slice(1).split('.');
     let value: any = this.theme;
-    
+
     for (const key of path) {
       if (value && typeof value === 'object' && key in value) {
         value = value[key];
@@ -353,7 +353,7 @@ export class StyleManager {
         return variable;
       }
     }
-    
+
     return value;
   }
 
@@ -376,13 +376,13 @@ export class StyleManager {
   // React Native 适配
   private adaptForRN<T extends StyleObject>(styles: T): T {
     const adapted = { ...styles };
-    
+
     // 移除不支持的属性
     const unsupportedProps = ['boxShadow', 'cursor', 'userSelect'];
     unsupportedProps.forEach(prop => {
       delete adapted[prop];
     });
-    
+
     // 转换阴影
     if ('boxShadow' in styles) {
       // 简化的阴影转换，实际项目中需要更复杂的解析
@@ -394,14 +394,14 @@ export class StyleManager {
         elevation: 2 // Android
       });
     }
-    
+
     return adapted;
   }
 
   // H5 适配
   private adaptForH5<T extends StyleObject>(styles: T): T {
     const adapted = { ...styles };
-    
+
     // 添加浏览器前缀
     if ('transform' in styles) {
       Object.assign(adapted, {
@@ -410,20 +410,20 @@ export class StyleManager {
         msTransform: styles.transform
       });
     }
-    
+
     return adapted;
   }
 
   // 小程序适配
   private adaptForMiniProgram<T extends StyleObject>(styles: T): T {
     const adapted = { ...styles };
-    
+
     // 移除不支持的属性
     const unsupportedProps = ['cursor', 'userSelect', 'outline'];
     unsupportedProps.forEach(prop => {
       delete adapted[prop];
     });
-    
+
     return adapted;
   }
 
@@ -465,7 +465,7 @@ export const vh = (value: number): string => `${value}vh`;
 export const vw = (value: number): string => `${value}vw`;
 
 // 颜色工具函数
-export const rgba = (r: number, g: number, b: number, a: number): string => 
+export const rgba = (r: number, g: number, b: number, a: number): string =>
   `rgba(${r}, ${g}, ${b}, ${a})`;
 
 export const hexToRgba = (hex: string, alpha: number): string => {

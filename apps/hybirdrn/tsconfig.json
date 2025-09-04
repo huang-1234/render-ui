@@ -13,7 +13,13 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@cp/core/*": ["../../packages/core/src/*"],
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/__tests__/*"]

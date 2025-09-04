@@ -6,10 +6,11 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "vitest",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "build:prod": "NODE_ENV=production rollup -c"
   },
   "keywords": ["cross-platform", "runtime", "react", "react-native"],
   "author": "",
@@ -20,8 +21,12 @@
   "devDependencies": {
     "classnames": "2.5.1",
     "@rollup/plugin-typescript": "^11.0.0",
-    "@types/react": "^18.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
     "rollup": "^4.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "@types/react": "^18.0.0",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {

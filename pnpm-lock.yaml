@@ -76,12 +76,30 @@ importers:
         specifier: ^7.0.0
         version: 7.0.1
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-json':
+        specifier: ^6.1.0
+        version: 6.1.0(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
+      '@rollup/plugin-typescript':
+        specifier: ^11.0.0
+        version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
       '@types/fs-extra':
         specifier: ^11.0.0
         version: 11.0.4
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.9
+      rollup:
+        specifier: ^4.0.0
+        version: 4.48.0
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -98,6 +116,15 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
@@ -110,6 +137,9 @@ importers:
       rollup:
         specifier: ^4.0.0
         version: 4.48.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.48.0)
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -120,6 +150,15 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
@@ -132,6 +171,9 @@ importers:
       rollup:
         specifier: ^4.0.0
         version: 4.48.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.48.0)
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -182,6 +224,15 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
@@ -194,6 +245,9 @@ importers:
       rollup:
         specifier: ^4.0.0
         version: 4.48.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.48.0)
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -207,24 +261,30 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
       '@types/react':
         specifier: ^18.0.0
         version: 18.3.1
-      miniprogram-api-typings:
-        specifier: ^3.0.0
-        version: 3.12.3
       rollup:
         specifier: ^4.0.0
         version: 4.48.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.48.0)
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@22.13.10)(jsdom@26.1.0)(less@4.4.1)(terser@5.44.0)
 
   packages/react-native-renderer:
     dependencies:
@@ -235,9 +295,18 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1
       react-native:
-        specifier: ^0.72.0
+        specifier: '>=0.60.0'
         version: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
     devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.8(rollup@4.48.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.48.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.48.0)
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)
@@ -245,30 +314,17 @@ importers:
         specifier: ^18.0.0
         version: 18.3.1
       '@types/react-native':
-        specifier: ^0.72.0
-        version: 0.72.8(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))
+        specifier: ^0.73.0
+        version: 0.73.0(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
       rollup:
         specifier: ^4.0.0
         version: 4.48.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.48.0)
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@22.13.10)(jsdom@26.1.0)(less@4.4.1)(terser@5.44.0)
-    optionalDependencies:
-      '@react-native-async-storage/async-storage':
-        specifier: ^1.19.0
-        version: 1.24.0(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))
-      '@react-native-clipboard/clipboard':
-        specifier: ^1.11.0
-        version: 1.16.3(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))(react@18.3.1)
-      react-native-device-info:
-        specifier: ^10.0.0
-        version: 10.14.0(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))
-      react-native-iphone-x-helper:
-        specifier: ^1.3.0
-        version: 1.3.1(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))
 
 packages:
 
@@ -1539,24 +1595,6 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@react-native-async-storage/async-storage@1.24.0':
-    resolution: {integrity: sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==}
-    peerDependencies:
-      react-native: ^0.0.0-0 || >=0.60 <1.0
-
-  '@react-native-clipboard/clipboard@1.16.3':
-    resolution: {integrity: sha512-cMIcvoZKIrShzJHEaHbTAp458R9WOv0fB6UyC7Ek4Qk561Ow/DrzmmJmH/rAZg21Z6ixJ4YSdFDC14crqIBmCQ==}
-    peerDependencies:
-      react: '>= 16.9.0'
-      react-native: '>= 0.61.5'
-      react-native-macos: '>= 0.61.0'
-      react-native-windows: '>= 0.61.0'
-    peerDependenciesMeta:
-      react-native-macos:
-        optional: true
-      react-native-windows:
-        optional: true
-
   '@react-native-community/cli-clean@11.4.1':
     resolution: {integrity: sha512-cwUbY3c70oBGv3FvQJWe2Qkq6m1+/dcEBonMDTYyH6i+6OrkzI4RkIGpWmbG1IS5JfE9ISUZkNL3946sxyWNkw==}
 
@@ -1616,6 +1654,42 @@ packages:
     resolution: {integrity: sha512-J3Q4Bkuo99k7mu+jPS9gSUSgq+lLRSI/+ahXNwV92XgJ/8UgOTxu2LPwhJnBk/sQKxq7E8WkZBnBiozukQMqrw==}
     peerDependencies:
       react-native: '*'
+
+  '@rollup/plugin-commonjs@25.0.8':
+    resolution: {integrity: sha512-ZEZWTK5n6Qde0to4vS9Mr5x/0UZoqCxPVR9KRUjU4kA2sO7GEUn1fop0DAwpO6z0Nw/kJON9bDmSxdWxO/TT1A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.68.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-json@6.1.0':
+    resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-node-resolve@15.3.1':
+    resolution: {integrity: sha512-tgg6b91pAybXHJQMAAwW9VuWBO6Thi+q7BCNARLwSqlmsHz0XYURtGvh/AuwSADXSI4h/2uHbs7s4FzlZDGSGA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.78.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-terser@0.4.4':
+    resolution: {integrity: sha512-XHeJC5Bgvs8LfukDwWZp7yeqin6ns8RTl2B9avbejt6tZqsqvVoWI7ZTQrcNsfKEDWBTnTxM8nMDkO2IFFbd0A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/plugin-typescript@11.1.6':
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
@@ -1915,11 +1989,15 @@ packages:
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
 
-  '@types/react-native@0.72.8':
-    resolution: {integrity: sha512-St6xA7+EoHN5mEYfdWnfYt0e8u6k2FR0P9s2arYgakQGFgU1f9FlPrIEcj0X24pLCF5c5i3WVuLCUdiCYHmOoA==}
+  '@types/react-native@0.73.0':
+    resolution: {integrity: sha512-6ZRPQrYM72qYKGWidEttRe6M5DZBEV5F+MHMHqd4TTYx0tfkcdrUFGdef6CCxY0jXU7wldvd/zA/b0A/kTeJmA==}
+    deprecated: This is a stub types definition. react-native provides its own type definitions, so you do not need this installed.
 
   '@types/react@18.3.1':
     resolution: {integrity: sha512-V0kuGBX3+prX+DQ/7r2qsv1NsdfnCLnTgnRJ1pYnxykBhGMz+qj+box5lq7XsO5mtZsBqpjwwTu/7wszPfMBcw==}
+
+  '@types/resolve@1.20.2':
+    resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
 
   '@types/send@0.17.5':
     resolution: {integrity: sha512-z6F2D3cOStZvuk2SaP6YrwkNO65iTZcwA2ZkSABegdkAh/lf+Aa/YQndZVfmEXT5vgAp6zv06VQ3ejSVjAny4w==}
@@ -2834,6 +2912,11 @@ packages:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
     deprecated: Glob versions prior to v9 are no longer supported
 
+  glob@8.1.0:
+    resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
+    engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
+
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
@@ -3013,6 +3096,9 @@ packages:
     resolution: {integrity: sha512-qP1vozQRI+BMOPcjFzrjXuQvdak2pHNUMZoeG2eRbiSqyvbEf/wQtEOTOX1guk6E3t36RkaqiSt8A/6YElNxLQ==}
     engines: {node: '>=12'}
 
+  is-module@1.0.0:
+    resolution: {integrity: sha512-51ypPSPCoTEIN9dy5Oy+h4pShgJmPCygKfyRCISBI+JoWT/2oJvK8QPxmwv7b/p239jXrm9M1mlQbyKJ5A152g==}
+
   is-nan@1.3.2:
     resolution: {integrity: sha512-E+zBKpQ2t6MEo1VsonYmluk9NxGrbzpeeLC2xIViuO2EjU2xsXsBPwTr3Ykv9l08UYEVEdWeRZNouaZqF6RN0w==}
     engines: {node: '>= 0.4'}
@@ -3020,10 +3106,6 @@ packages:
   is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
-
-  is-plain-obj@2.1.0:
-    resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
-    engines: {node: '>=8'}
 
   is-plain-object@2.0.4:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
@@ -3035,6 +3117,9 @@ packages:
 
   is-potential-custom-element-name@1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
+
+  is-reference@1.2.1:
+    resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
 
   is-regex@1.2.1:
     resolution: {integrity: sha512-MjYsKHO5O7mCsmRGxWcLWheFqN9DJ/2TmngvjKXihe6efViPqc274+Fx/4fYj/r03+ESvBdTXK0V6tA3rgez1g==}
@@ -3308,10 +3393,6 @@ packages:
   memoizerific@1.11.3:
     resolution: {integrity: sha512-/EuHYwAPdLtXwAwSZkh/Gutery6pD2KYd44oQLhAvQp/50mpyduZh8Q7PYHXTCJ+wuXxt7oij2LXyIJOOYFPog==}
 
-  merge-options@3.0.4:
-    resolution: {integrity: sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==}
-    engines: {node: '>=10'}
-
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
 
@@ -3428,6 +3509,10 @@ packages:
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
 
+  minimatch@5.1.6:
+    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
+    engines: {node: '>=10'}
+
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -3438,9 +3523,6 @@ packages:
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  miniprogram-api-typings@3.12.3:
-    resolution: {integrity: sha512-o7bOfrU28MEMCBWo83nXv0ROQSBFxJcfCl4f2wTYqah64ipC5RGqLJfvWJTWhlQt2ECVwspSzM8LgvnfMo7TEQ==}
 
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
@@ -3785,6 +3867,9 @@ packages:
   ramda@0.29.0:
     resolution: {integrity: sha512-BBea6L67bYLtdbOqfp8f58fPMqEwx0doL+pAi8TZyp2YWz8R9G8z9x75CZI8W+ftqhFHCpEX2cRnUUXK130iKA==}
 
+  randombytes@2.1.0:
+    resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
+
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
@@ -3819,16 +3904,6 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
-
-  react-native-device-info@10.14.0:
-    resolution: {integrity: sha512-9NnTGfhEU4UgQtz4p6COk2Gbqly0dpSWrJtp+dw5rNAi96KtYbaNnO5yoOHDlJ1SVIzh8+hFu3WxVbnWkFU9gA==}
-    peerDependencies:
-      react-native: '*'
-
-  react-native-iphone-x-helper@1.3.1:
-    resolution: {integrity: sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==}
-    peerDependencies:
-      react-native: '>=0.42.0'
 
   react-native@0.72.17:
     resolution: {integrity: sha512-k3dNe0XqoYCGGWTenbupWSj+ljW3GIfmYS5P4s3if4j0csx2YbenKgH1aJNWLp+UP7ONwfId6G+uBoUJfyMxXg==}
@@ -3931,6 +4006,11 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
+  rollup-plugin-peer-deps-external@2.2.4:
+    resolution: {integrity: sha512-AWdukIM1+k5JDdAqV/Cxd+nejvno2FVLVeZ74NKggm3Q5s9cbbcOgUPGdbxPi4BXu7xGaZ8HG12F+thImYu/0g==}
+    peerDependencies:
+      rollup: '*'
+
   rollup-plugin-visualizer@6.0.3:
     resolution: {integrity: sha512-ZU41GwrkDcCpVoffviuM9Clwjy5fcUxlz0oMoTXTYsK+tcIFzbdacnrr2n8TXcHxbGKKXtOdjxM2HUS4HjkwIw==}
     engines: {node: '>=18'}
@@ -4009,6 +4089,9 @@ packages:
     resolution: {integrity: sha512-ghgmKt5o4Tly5yEG/UJp8qTd0AN7Xalw4XBtDEKP655B699qMEtra1WlXeE6WIvdEG481JvRxULKsInq/iNysw==}
     engines: {node: '>=0.10.0'}
 
+  serialize-javascript@6.0.2:
+    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+
   serve-static@1.16.2:
     resolution: {integrity: sha512-VqpjJZKadQB/PEbEwvFdO43Ax5dFBZ2UECszz8bQ7pi7wt//PWe1P6MN7eCnjsatYtBT6EuiClbjSWP2WrIoTw==}
     engines: {node: '>= 0.8.0'}
@@ -4075,6 +4158,9 @@ packages:
   slice-ansi@2.1.0:
     resolution: {integrity: sha512-Qu+VC3EwYLldKa1fCxuuvULvSJOKEgk9pi8dZeCVK7TqBfUNTH4sFkk4joj8afVSfAYgJoSOetjx9QWOJ5mYoQ==}
     engines: {node: '>=6'}
+
+  smob@1.5.0:
+    resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -5980,18 +6066,6 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@react-native-async-storage/async-storage@1.24.0(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))':
-    dependencies:
-      merge-options: 3.0.4
-      react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
-    optional: true
-
-  '@react-native-clipboard/clipboard@1.16.3(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-      react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
-    optional: true
-
   '@react-native-community/cli-clean@11.4.1':
     dependencies:
       '@react-native-community/cli-tools': 11.4.1
@@ -6177,6 +6251,41 @@ snapshots:
       invariant: 2.2.4
       nullthrows: 1.1.1
       react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
+
+  '@rollup/plugin-commonjs@25.0.8(rollup@4.48.0)':
+    dependencies:
+      '@rollup/pluginutils': 5.2.0(rollup@4.48.0)
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      glob: 8.1.0
+      is-reference: 1.2.1
+      magic-string: 0.30.18
+    optionalDependencies:
+      rollup: 4.48.0
+
+  '@rollup/plugin-json@6.1.0(rollup@4.48.0)':
+    dependencies:
+      '@rollup/pluginutils': 5.2.0(rollup@4.48.0)
+    optionalDependencies:
+      rollup: 4.48.0
+
+  '@rollup/plugin-node-resolve@15.3.1(rollup@4.48.0)':
+    dependencies:
+      '@rollup/pluginutils': 5.2.0(rollup@4.48.0)
+      '@types/resolve': 1.20.2
+      deepmerge: 4.3.1
+      is-module: 1.0.0
+      resolve: 1.22.10
+    optionalDependencies:
+      rollup: 4.48.0
+
+  '@rollup/plugin-terser@0.4.4(rollup@4.48.0)':
+    dependencies:
+      serialize-javascript: 6.0.2
+      smob: 1.5.0
+      terser: 5.44.0
+    optionalDependencies:
+      rollup: 4.48.0
 
   '@rollup/plugin-typescript@11.1.6(rollup@4.48.0)(tslib@2.8.1)(typescript@5.8.3)':
     dependencies:
@@ -6528,17 +6637,24 @@ snapshots:
     dependencies:
       '@types/react': 18.3.1
 
-  '@types/react-native@0.72.8(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))':
+  '@types/react-native@0.73.0(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)':
     dependencies:
-      '@react-native/virtualized-lists': 0.72.8(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1))
-      '@types/react': 18.3.1
+      react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
     transitivePeerDependencies:
-      - react-native
+      - '@babel/core'
+      - '@babel/preset-env'
+      - bufferutil
+      - encoding
+      - react
+      - supports-color
+      - utf-8-validate
 
   '@types/react@18.3.1':
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.1.3
+
+  '@types/resolve@1.20.2': {}
 
   '@types/send@0.17.5':
     dependencies:
@@ -7617,6 +7733,14 @@ snapshots:
       once: 1.4.0
       path-is-absolute: 1.0.1
 
+  glob@8.1.0:
+    dependencies:
+      fs.realpath: 1.0.0
+      inflight: 1.0.6
+      inherits: 2.0.4
+      minimatch: 5.1.6
+      once: 1.4.0
+
   globals@14.0.0: {}
 
   gopd@1.2.0: {}
@@ -7791,15 +7915,14 @@ snapshots:
 
   is-interactive@2.0.0: {}
 
+  is-module@1.0.0: {}
+
   is-nan@1.3.2:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
 
   is-number@7.0.0: {}
-
-  is-plain-obj@2.1.0:
-    optional: true
 
   is-plain-object@2.0.4:
     dependencies:
@@ -7809,6 +7932,10 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1:
     optional: true
+
+  is-reference@1.2.1:
+    dependencies:
+      '@types/estree': 1.0.8
 
   is-regex@1.2.1:
     dependencies:
@@ -8141,11 +8268,6 @@ snapshots:
     dependencies:
       map-or-similar: 1.5.0
 
-  merge-options@3.0.4:
-    dependencies:
-      is-plain-obj: 2.1.0
-    optional: true
-
   merge-stream@2.0.0: {}
 
   metro-babel-transformer@0.76.9:
@@ -8417,6 +8539,10 @@ snapshots:
     dependencies:
       brace-expansion: 1.1.12
 
+  minimatch@5.1.6:
+    dependencies:
+      brace-expansion: 2.0.2
+
   minimatch@9.0.5:
     dependencies:
       brace-expansion: 2.0.2
@@ -8424,8 +8550,6 @@ snapshots:
   minimist@1.2.8: {}
 
   minipass@7.1.2: {}
-
-  miniprogram-api-typings@3.12.3: {}
 
   mkdirp@0.5.6:
     dependencies:
@@ -8741,6 +8865,10 @@ snapshots:
 
   ramda@0.29.0: {}
 
+  randombytes@2.1.0:
+    dependencies:
+      safe-buffer: 5.2.1
+
   range-parser@1.2.1: {}
 
   react-devtools-core@4.28.5:
@@ -8777,16 +8905,6 @@ snapshots:
   react-is@18.1.0: {}
 
   react-is@18.3.1: {}
-
-  react-native-device-info@10.14.0(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)):
-    dependencies:
-      react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
-    optional: true
-
-  react-native-iphone-x-helper@1.3.1(react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)):
-    dependencies:
-      react-native: 0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1)
-    optional: true
 
   react-native@0.72.17(@babel/core@7.28.3)(@babel/preset-env@7.28.3(@babel/core@7.28.3))(react@18.3.1):
     dependencies:
@@ -8932,6 +9050,10 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
+  rollup-plugin-peer-deps-external@2.2.4(rollup@4.48.0):
+    dependencies:
+      rollup: 4.48.0
+
   rollup-plugin-visualizer@6.0.3(rollup@4.48.0):
     dependencies:
       open: 8.4.2
@@ -9032,6 +9154,10 @@ snapshots:
 
   serialize-error@2.1.0: {}
 
+  serialize-javascript@6.0.2:
+    dependencies:
+      randombytes: 2.1.0
+
   serve-static@1.16.2:
     dependencies:
       encodeurl: 2.0.0
@@ -9109,6 +9235,8 @@ snapshots:
       ansi-styles: 3.2.1
       astral-regex: 1.0.0
       is-fullwidth-code-point: 2.0.0
+
+  smob@1.5.0: {}
 
   source-map-js@1.2.1: {}
 

@@ -7,10 +7,11 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c --watch",
+    "dev": "rollup -c -w",
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build:prod": "NODE_ENV=production rollup -c"
   },
   "keywords": ["cross-platform", "components", "react", "ui"],
   "author": "",
@@ -22,6 +23,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "@storybook/react": "^7.0.0",
     "@types/react": "^18.0.0",
     "rollup": "^4.0.0",
