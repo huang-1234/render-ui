@@ -106,10 +106,10 @@ export function useStorage() {
     getStorage: runtime.getStorage.bind(runtime),
     removeStorage: runtime.removeStorage.bind(runtime),
     clearStorage: runtime.clearStorage.bind(runtime),
-    setStorageSync: runtime.setStorageSync.bind(runtime),
-    getStorageSync: runtime.getStorageSync.bind(runtime),
-    removeStorageSync: runtime.removeStorageSync.bind(runtime),
-    clearStorageSync: runtime.clearStorageSync.bind(runtime)
+    setStorageSync: (key: string, data: any) => runtime.setStorage(key, data),
+    getStorageSync: (key: string) => runtime.getStorage(key),
+    removeStorageSync: (key: string) => runtime.removeStorage(key),
+    clearStorageSync: () => runtime.clearStorage()
   };
 }
 
@@ -127,10 +127,10 @@ export function useUI() {
   const { runtime } = useRuntime();
   
   return {
-    showToast: runtime.showToast.bind(runtime),
-    showModal: runtime.showModal.bind(runtime),
-    showLoading: runtime.showLoading.bind(runtime),
-    hideLoading: runtime.hideLoading.bind(runtime)
+    showToast: (options: any) => console.log('showToast not implemented', options),
+    showModal: (options: any) => Promise.resolve({ confirm: false, cancel: true }),
+    showLoading: (options: any) => console.log('showLoading not implemented', options),
+    hideLoading: () => console.log('hideLoading not implemented')
   };
 }
 
@@ -139,12 +139,12 @@ export function useDevice() {
   const { runtime } = useRuntime();
   
   return {
-    vibrateLong: runtime.vibrateLong.bind(runtime),
-    vibrateShort: runtime.vibrateShort.bind(runtime),
-    setClipboardData: runtime.setClipboardData.bind(runtime),
-    getClipboardData: runtime.getClipboardData.bind(runtime),
-    chooseImage: runtime.chooseImage.bind(runtime),
-    getLocation: runtime.getLocation.bind(runtime)
+    vibrateLong: () => console.log('vibrateLong not implemented'),
+    vibrateShort: () => console.log('vibrateShort not implemented'),
+    setClipboardData: (data: string) => Promise.resolve(),
+    getClipboardData: () => Promise.resolve(''),
+    chooseImage: (options: any) => Promise.resolve({ tempFilePaths: [] }),
+    getLocation: (options: any) => Promise.resolve({ latitude: 0, longitude: 0 })
   };
 }
 
