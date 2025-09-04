@@ -87,7 +87,7 @@ export class Router {
   // 查找路由
   private findRoute(path: string): RouteConfig | null {
     const normalizedPath = this.normalizePath(path);
-    
+
     // 精确匹配
     if (this.routes.has(normalizedPath)) {
       return this.routes.get(normalizedPath)!;
@@ -171,7 +171,7 @@ export class Router {
       });
 
       // 添加查询参数
-      const queryParams = Object.entries(params).filter(([key]) => 
+      const queryParams = Object.entries(params).filter(([key]) =>
         !url.includes(`:${key}`)
       );
 
@@ -215,7 +215,7 @@ export class Router {
 
     // 调用平台特定的导航方法
     const url = this.buildUrl(path, params);
-    
+
     try {
       await this.runtime.navigateTo({
         url,
@@ -254,7 +254,7 @@ export class Router {
     }
 
     const url = this.buildUrl(path, params);
-    
+
     try {
       await this.runtime.redirectTo({
         url,
@@ -304,7 +304,9 @@ export class Router {
   // 返回上一页
   async navigateBack(delta = 1): Promise<void> {
     try {
-      await this.runtime.navigateBack(delta);
+      if (this.runtime.navigateBack) {
+        this.runtime.navigateBack(delta);
+      }
       // 注意：这里无法准确知道返回后的路由信息
       // 在实际应用中可能需要维护路由历史栈
     } catch (error) {
@@ -328,7 +330,7 @@ export class Router {
   // 添加路由变化监听器
   addListener(listener: RouteChangeListener): () => void {
     this.listeners.push(listener);
-    
+
     // 返回取消监听的函数
     return () => {
       const index = this.listeners.indexOf(listener);
@@ -352,7 +354,7 @@ export class Router {
   // 添加路由守卫
   addGuard(guard: RouteGuard): () => void {
     this.guards.push(guard);
-    
+
     return () => {
       const index = this.guards.indexOf(guard);
       if (index > -1) {

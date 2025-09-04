@@ -1,5 +1,16 @@
 import React from 'react';
-import { TextProps } from '@cross-platform/core';
+
+interface TextProps {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+  numberOfLines?: number;
+  ellipsizeMode?: 'head' | 'middle' | 'tail';
+  selectable?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLSpanElement>) => void;
+  onPress?: (event: React.MouseEvent<HTMLSpanElement>) => void;
+  [key: string]: any;
+}
 
 const Text: React.FC<TextProps> = ({ 
   children, 

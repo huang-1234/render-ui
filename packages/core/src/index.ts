@@ -10,15 +10,13 @@ export type {
   Runtime,
   NavigateOptions,
   SystemInfo,
-  RequestOptions,
+  RequestOptions
 } from './runtime';
-// export {
 
-//   RouteConfig,
-//   RouteInfo,
-//   StyleObject,
-//   ThemeVariables
-// } from './runtime';
+export type {
+  RouteConfig,
+  RouteInfo
+} from './router';
 
 // 默认导出
 export { getCurrentRuntime as default } from './runtime';

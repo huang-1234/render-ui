@@ -1,12 +1,19 @@
 import React from 'react';
-import { type SafeAreaViewProps } from '@cross-platform/core';
 
-const SafeAreaView: React.FC<SafeAreaViewProps> = ({
-  children,
-  style,
+interface SafeAreaViewProps {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+  edges?: Array<'top' | 'bottom' | 'left' | 'right'>;
+  [key: string]: any;
+}
+
+const SafeAreaView: React.FC<SafeAreaViewProps> = ({ 
+  children, 
+  style, 
   className,
   edges = ['top', 'bottom', 'left', 'right'],
-  ...props
+  ...props 
 }) => {
   const safeAreaStyle: React.CSSProperties = {
     ...style,
@@ -29,4 +36,4 @@ const SafeAreaView: React.FC<SafeAreaViewProps> = ({
   );
 };
 
-export default SafeAreaView;d
+export default SafeAreaView;

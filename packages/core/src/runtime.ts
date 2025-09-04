@@ -1,3 +1,5 @@
+import React from 'react';
+
 // 平台类型定义
 export type Platform = 'h5' | 'rn' | 'weapp' | 'alipay' | 'tt' | 'qq' | 'jd';
 
@@ -27,6 +29,8 @@ export interface SystemInfo {
     left: number;
     right: number;
   };
+  brand: string;
+  model: string;
 }
 
 // 网络请求选项
@@ -58,10 +62,10 @@ export interface Runtime {
   isProduction: boolean;
 
   // 导航 API
-  navigateTo(options: NavigateOptions): Promise<void>;
-  redirectTo(options: NavigateOptions): Promise<void>;
-  switchTab(options: NavigateOptions): Promise<void>;
-  navigateBack(delta?: number): Promise<void>;
+  navigateTo(options: NavigateOptions): void;
+  redirectTo(options: NavigateOptions): void;
+  switchTab(options: NavigateOptions): void;
+  navigateBack?(delta?: number): void;
 
   // 系统信息
   getSystemInfo(): Promise<SystemInfo>;
@@ -165,7 +169,9 @@ function createH5Runtime(): Runtime {
           bottom: 0,
           left: 0,
           right: 0
-        }
+        },
+        brand: 'Browser',
+        model: 'Web'
       };
     },
 
@@ -185,7 +191,9 @@ function createH5Runtime(): Runtime {
           bottom: 0,
           left: 0,
           right: 0
-        }
+        },
+        brand: 'Browser',
+        model: 'Web'
       };
     },
 
@@ -297,7 +305,7 @@ function createH5Runtime(): Runtime {
             resolve({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              altitude: options?.altitude ? position.coords.altitude : undefined
+              altitude: options?.altitude ? (position.coords.altitude ?? undefined) : undefined
             });
           },
           (error) => reject(error)
@@ -315,8 +323,8 @@ function createRNRuntime(): Runtime {
   
   return {
     platform: 'rn',
-    isDevelopment: __DEV__,
-    isProduction: !__DEV__,
+    isDevelopment: process.env.NODE_ENV === 'development',
+    isProduction: process.env.NODE_ENV === 'production',
 
     async navigateTo(options: NavigateOptions) {
       // React Native 导航需要配合导航库实现
@@ -340,21 +348,23 @@ function createRNRuntime(): Runtime {
       const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
       
       return {
-        platform: Platform.OS,
-        system: Platform.OS,
+        platform: 'rn',
+        system: Platform.OS === 'ios' ? 'iOS' : 'Android',
         version: Platform.Version.toString(),
         screenWidth,
         screenHeight,
         windowWidth: width,
         windowHeight: height,
-        pixelRatio: Platform.select({ ios: 2, android: 1 }) || 1,
-        statusBarHeight: Platform.select({ ios: 44, android: 24 }) || 0,
+        pixelRatio: Dimensions.get('window').scale,
+        statusBarHeight: 0,
         safeArea: {
           top: 0,
           bottom: 0,
           left: 0,
           right: 0
-        }
+        },
+        brand: 'Unknown',
+        model: 'Unknown'
       };
     },
 
@@ -605,7 +615,9 @@ function createWeappRuntime(): Runtime {
         windowHeight: res.windowHeight,
         pixelRatio: res.pixelRatio,
         statusBarHeight: res.statusBarHeight,
-        safeArea: res.safeArea || { top: 0, bottom: 0, left: 0, right: 0 }
+        safeArea: res.safeArea || { top: 0, bottom: 0, left: 0, right: 0 },
+        brand: res.brand || 'Unknown',
+        model: res.model || 'Unknown'
       };
     },
 

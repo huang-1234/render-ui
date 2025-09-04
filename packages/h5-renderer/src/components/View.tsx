@@ -1,5 +1,13 @@
 import React from 'react';
-import { ViewProps } from '@cross-platform/core';
+
+interface ViewProps {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onPress?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  [key: string]: any;
+}
 
 const View: React.FC<ViewProps> = ({ 
   children, 

@@ -93,7 +93,7 @@ export function useNavigation() {
     navigateTo: runtime.navigateTo.bind(runtime),
     redirectTo: runtime.redirectTo.bind(runtime),
     switchTab: runtime.switchTab.bind(runtime),
-    navigateBack: runtime.navigateBack.bind(runtime)
+    navigateBack: runtime.navigateBack ? runtime.navigateBack.bind(runtime) : () => {}
   };
 }
 

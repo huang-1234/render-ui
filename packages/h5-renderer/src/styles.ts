@@ -1,6 +1,4 @@
-import { StyleManager as BaseStyleManager } from '@cross-platform/core';
-
-export default class H5StyleManager extends BaseStyleManager {
+export default class H5StyleManager {
   private static instance: H5StyleManager;
   private styleSheets: Map<string, CSSStyleSheet> = new Map();
   private cssRules: Map<string, string> = new Map();
