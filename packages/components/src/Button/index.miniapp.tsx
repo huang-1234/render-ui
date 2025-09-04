@@ -1,6 +1,8 @@
 import React, { forwardRef, ReactNode, useState } from 'react';
-import { StyleObject } from '@cross-platform/core';
-import { TouchableOpacity, View as RNView, Text as RNText } from 'react-native';
+import { createStyles, StyleObject, useUI } from '@cross-platform/core';
+import classNames from 'classnames';
+import View from '../View';
+import Text from '../Text';
 
 // Button 组件属性接口
 export interface ButtonProps {
@@ -35,7 +37,7 @@ export interface ButtonProps {
   htmlType?: 'button' | 'submit' | 'reset'; // H5 button type
 }
 
-// Button 组件实现 - React Native 版本
+// Button 组件实现 - 小程序版本
 const Button = forwardRef<any, ButtonProps>((props, ref) => {
   const {
     children,
@@ -66,6 +68,7 @@ const Button = forwardRef<any, ButtonProps>((props, ref) => {
     ...restProps
   } = props;
 
+  const { showToast } = useUI();
   const [pressed, setPressed] = useState(false);
 
   // 获取按钮主题样式
@@ -165,12 +168,14 @@ const Button = forwardRef<any, ButtonProps>((props, ref) => {
   const sizeStyle = getButtonSize();
   const shapeStyle = getButtonShape();
 
-  const buttonStyle = {
+  const buttonStyle: StyleObject = {
     // 基础样式
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
+    borderStyle: 'solid',
     // 尺寸样式
     height: sizeStyle.height,
     paddingLeft: shapeStyle.paddingHorizontal ?? sizeStyle.paddingHorizontal,
@@ -192,29 +197,38 @@ const Button = forwardRef<any, ButtonProps>((props, ref) => {
     ...(pressed && !disabled && {
       opacity: 0.8
     }),
-    // React Native 特定样式
-    elevation: 2, // Android 阴影
-    shadowColor: '#000', // iOS 阴影
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     // 自定义样式
     ...customStyle
   };
 
   // 文本样式
-  const textStyle = {
+  const textStyle: StyleObject = {
     fontSize: sizeStyle.fontSize,
     color: color || (ghost ? theme.borderColor : theme.color),
     fontWeight: '500',
     ...(disabled && { opacity: 0.6 })
   };
 
+  // 创建适配后的样式
+  const styles = createStyles({
+    default: buttonStyle,
+    weapp: {
+      // 小程序特定样式
+      border: `${borderWidth || 1}px solid ${borderColor || theme.borderColor}`
+    }
+  });
+
   // 事件处理
-  const handlePress = (event: any) => {
+  const handlePress = async (event: any) => {
     if (disabled || loading) {
       return;
     }
+
+    if (loading) {
+      await showToast({ title: '请稍候...', icon: 'loading' });
+      return;
+    }
+
     onPress?.(event);
   };
 
@@ -243,59 +257,53 @@ const Button = forwardRef<any, ButtonProps>((props, ref) => {
     // 左侧图标
     if (icon && iconPosition === 'left') {
       content.push(
-        <RNView key="left-icon" style={{ marginRight: children ? 8 : 0 }}>
+        <View key="left-icon" style={{ marginRight: children ? 8 : 0 }}>
           {icon}
-        </RNView>
+        </View>
       );
     }
 
     // 文本内容
     if (children) {
       content.push(
-        <RNText key="text" style={textStyle}>
+        <Text key="text" style={textStyle}>
           {children}
-        </RNText>
+        </Text>
       );
     }
 
     // 右侧图标
     if (icon && iconPosition === 'right') {
       content.push(
-        <RNView key="right-icon" style={{ marginLeft: children ? 8 : 0 }}>
+        <View key="right-icon" style={{ marginLeft: children ? 8 : 0 }}>
           {icon}
-        </RNView>
-      );
-    }
-
-    // 加载状态
-    if (loading) {
-      content.unshift(
-        <RNView key="loading" style={{ marginRight: children ? 8 : 0 }}>
-          <RNText style={textStyle}>⏳</RNText>
-        </RNView>
+        </View>
       );
     }
 
     return content;
   };
 
-  return (
-    <TouchableOpacity
-      ref={ref}
-      style={buttonStyle}
-      onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onLongPress={handleLongPress}
-      disabled={disabled}
-      activeOpacity={0.8}
-      testID={testID}
-      {...restProps}
-    >
-      <RNView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-        {renderContent()}
-      </RNView>
-    </TouchableOpacity>
+  // 小程序特定属性
+  const buttonProps = {
+    className: classNames('cross-button', `cross-button-${type}`, `cross-button-${size}`, className),
+    style: styles,
+    onClick: handlePress,
+    onTouchStart: handlePressIn,
+    onTouchEnd: handlePressOut,
+    onLongPress: handleLongPress,
+    disabled,
+    loading,
+    ...restProps
+  };
+
+  return React.createElement(
+    'button',
+    {
+      ref,
+      ...buttonProps
+    },
+    !loading && renderContent()
   );
 });
 

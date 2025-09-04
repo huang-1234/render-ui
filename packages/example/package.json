@@ -15,12 +15,17 @@
     "build:all": "cross-cli build -p all",
     "test": "vitest"
   },
-  "keywords": ["cross-platform", "example", "demo"],
+  "keywords": [
+    "cross-platform",
+    "example",
+    "demo"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@cross-platform/core": "workspace:*",
     "@cross-platform/components": "workspace:*",
+    "@cross-platform/core": "workspace:*",
+    "cross-cli": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
-import { StyleObject } from '@cross-platform/core';
-import { View as RNView } from 'react-native';
+import { createStyles, StyleObject } from '@cross-platform/core';
+import classNames from 'classnames';
 
 // View 组件属性接口
 export interface ViewProps {
@@ -59,7 +59,7 @@ export interface ViewProps {
   'data-testid'?: string; // H5 测试
 }
 
-// View 组件实现 - React Native 版本
+// View 组件实现 - 小程序版本
 const View = forwardRef<any, ViewProps>((props, ref) => {
   const {
     children,
@@ -119,7 +119,7 @@ const View = forwardRef<any, ViewProps>((props, ref) => {
   } = props;
 
   // 构建样式对象
-  const styleObject = {
+  const styleObject: StyleObject = {
     // 布局样式
     ...(flex !== undefined && { flex }),
     ...(flexDirection && { flexDirection }),
@@ -165,20 +165,35 @@ const View = forwardRef<any, ViewProps>((props, ref) => {
     ...customStyle
   };
 
-  return (
-    <RNView
-      ref={ref}
-      style={styleObject}
-      onPress={onClick}
-      onLongPress={onLongPress}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      testID={testID}
-      {...restProps}
-    >
-      {children}
-    </RNView>
+  // 创建适配后的样式
+  const styles = createStyles({
+    default: styleObject,
+    weapp: {
+      // 小程序特定样式
+      display: 'block',
+      boxSizing: 'border-box'
+    }
+  });
+
+  // 小程序特定属性
+  const viewProps = {
+    className: classNames('cross-view', className),
+    style: styles,
+    onClick,
+    onLongPress,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    ...restProps
+  };
+
+  return React.createElement(
+    'view',
+    {
+      ref,
+      ...viewProps
+    },
+    children
   );
 });
 

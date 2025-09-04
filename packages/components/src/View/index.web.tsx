@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
-import { StyleObject } from '@cross-platform/core';
-import { View as RNView } from 'react-native';
+import { createStyles, StyleObject } from '@cross-platform/core';
+import classNames from 'classnames';
 
 // View 组件属性接口
 export interface ViewProps {
@@ -59,7 +59,7 @@ export interface ViewProps {
   'data-testid'?: string; // H5 测试
 }
 
-// View 组件实现 - React Native 版本
+// View 组件实现 - Web 版本
 const View = forwardRef<any, ViewProps>((props, ref) => {
   const {
     children,
@@ -119,7 +119,7 @@ const View = forwardRef<any, ViewProps>((props, ref) => {
   } = props;
 
   // 构建样式对象
-  const styleObject = {
+  const styleObject: StyleObject = {
     // 布局样式
     ...(flex !== undefined && { flex }),
     ...(flexDirection && { flexDirection }),
@@ -165,20 +165,53 @@ const View = forwardRef<any, ViewProps>((props, ref) => {
     ...customStyle
   };
 
+  // 创建适配后的样式
+  const styles = createStyles({
+    default: styleObject,
+    h5: {
+      // H5 特定样式
+      display: 'block',
+      boxSizing: 'border-box'
+    }
+  });
+
+  // 事件处理
+  const handleClick = (event: any) => {
+    onClick?.(event);
+  };
+
+  const handleLongPress = (event: any) => {
+    // H5 模拟长按
+    let timer: number;
+    const startLongPress = () => {
+      timer = setTimeout(() => {
+        onLongPress?.(event);
+      }, 500);
+    };
+    const cancelLongPress = () => {
+      clearTimeout(timer);
+    };
+
+    event.target.addEventListener('mousedown', startLongPress);
+    event.target.addEventListener('mouseup', cancelLongPress);
+    event.target.addEventListener('mouseleave', cancelLongPress);
+  };
+
   return (
-    <RNView
+    <div
       ref={ref}
-      style={styleObject}
-      onPress={onClick}
-      onLongPress={onLongPress}
+      className={classNames('cross-view', className)}
+      style={styles}
+      onClick={handleClick}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
-      testID={testID}
+      id={id}
+      data-testid={dataTestId}
       {...restProps}
     >
       {children}
-    </RNView>
+    </div>
   );
 });
 

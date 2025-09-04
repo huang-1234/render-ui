@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
-import { StyleObject } from '@cross-platform/core';
-import { Text as RNText } from 'react-native';
+import { createStyles, StyleObject } from '@cross-platform/core';
+import classNames from 'classnames';
 
 // Text 组件属性接口
 export interface TextProps {
@@ -43,7 +43,7 @@ export interface TextProps {
   'data-testid'?: string; // H5 测试
 }
 
-// Text 组件实现 - React Native 版本
+// Text 组件实现 - 小程序版本
 const Text = forwardRef<any, TextProps>((props, ref) => {
   const {
     children,
@@ -86,7 +86,7 @@ const Text = forwardRef<any, TextProps>((props, ref) => {
   } = props;
 
   // 构建样式对象
-  const styleObject = {
+  const styleObject: StyleObject = {
     // 文本样式
     ...(fontSize !== undefined && { fontSize }),
     ...(fontWeight && { fontWeight }),
@@ -115,20 +115,36 @@ const Text = forwardRef<any, TextProps>((props, ref) => {
     ...customStyle
   };
 
-  return (
-    <RNText
-      ref={ref}
-      style={styleObject}
-      onPress={onClick}
-      onLongPress={onLongPress}
-      numberOfLines={numberOfLines}
-      ellipsizeMode={ellipsizeMode}
-      selectable={selectable}
-      testID={testID}
-      {...restProps}
-    >
-      {children}
-    </RNText>
+  // 创建适配后的样式
+  const styles = createStyles({
+    default: styleObject,
+    weapp: {
+      // 小程序特定样式
+      display: 'inline-block',
+      userSelect: selectable
+    }
+  });
+
+  // 小程序特定属性
+  const textProps: any = {
+    ref,
+    className: classNames('cross-text', className),
+    style: styles,
+    onClick,
+    onLongPress,
+    selectable,
+    ...restProps
+  };
+
+  // 小程序文本截断
+  if (numberOfLines && numberOfLines > 0) {
+    textProps.maxLines = numberOfLines;
+  }
+
+  return React.createElement(
+    'text',
+    textProps,
+    children
   );
 });
 

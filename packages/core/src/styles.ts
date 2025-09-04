@@ -4,7 +4,7 @@ import { Platform, getCurrentRuntime } from './runtime';
 export type StyleValue = string | number;
 
 // 样式对象类型
-export type StyleObject = Record<string, StyleValue>;
+export type StyleObject = Record<string, StyleValue | Record<string, StyleValue>>;
 
 // 平台特定样式
 export type PlatformStyles<T extends StyleObject> = {

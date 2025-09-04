@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
-import { StyleObject } from '@cross-platform/core';
-import { Text as RNText } from 'react-native';
+import { createStyles, StyleObject } from '@cross-platform/core';
+import classNames from 'classnames';
 
 // Text 组件属性接口
 export interface TextProps {
@@ -43,7 +43,7 @@ export interface TextProps {
   'data-testid'?: string; // H5 测试
 }
 
-// Text 组件实现 - React Native 版本
+// Text 组件实现 - Web 版本
 const Text = forwardRef<any, TextProps>((props, ref) => {
   const {
     children,
@@ -86,7 +86,7 @@ const Text = forwardRef<any, TextProps>((props, ref) => {
   } = props;
 
   // 构建样式对象
-  const styleObject = {
+  const styleObject: StyleObject = {
     // 文本样式
     ...(fontSize !== undefined && { fontSize }),
     ...(fontWeight && { fontWeight }),
@@ -115,20 +115,71 @@ const Text = forwardRef<any, TextProps>((props, ref) => {
     ...customStyle
   };
 
+  // 处理文本截断
+  if (numberOfLines && numberOfLines > 0) {
+    if (numberOfLines === 1) {
+      Object.assign(styleObject, {
+        overflow: 'hidden',
+        textOverflow: ellipsizeMode === 'tail' ? 'ellipsis' : 'clip',
+        whiteSpace: 'nowrap'
+      });
+    } else {
+      Object.assign(styleObject, {
+        display: '-webkit-box',
+        WebkitLineClamp: numberOfLines,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden'
+      });
+    }
+  }
+
+  // 创建适配后的样式
+  const styles = createStyles({
+    default: styleObject,
+    h5: {
+      // H5 特定样式
+      display: 'inline-block',
+      userSelect: selectable ? 'text' : 'none',
+      WebkitUserSelect: selectable ? 'text' : 'none',
+      MozUserSelect: selectable ? 'text' : 'none',
+      msUserSelect: selectable ? 'text' : 'none'
+    }
+  });
+
+  // 事件处理
+  const handleClick = (event: any) => {
+    onClick?.(event);
+  };
+
+  const handleLongPress = (event: any) => {
+    // H5 模拟长按
+    let timer: number;
+    const startLongPress = () => {
+      timer = setTimeout(() => {
+        onLongPress?.(event);
+      }, 500);
+    };
+    const cancelLongPress = () => {
+      clearTimeout(timer);
+    };
+
+    event.target.addEventListener('mousedown', startLongPress);
+    event.target.addEventListener('mouseup', cancelLongPress);
+    event.target.addEventListener('mouseleave', cancelLongPress);
+  };
+
   return (
-    <RNText
+    <span
       ref={ref}
-      style={styleObject}
-      onPress={onClick}
-      onLongPress={onLongPress}
-      numberOfLines={numberOfLines}
-      ellipsizeMode={ellipsizeMode}
-      selectable={selectable}
-      testID={testID}
+      className={classNames('cross-text', className)}
+      style={styles}
+      onClick={handleClick}
+      id={id}
+      data-testid={dataTestId}
       {...restProps}
     >
       {children}
-    </RNText>
+    </span>
   );
 });
 
