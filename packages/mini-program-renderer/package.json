@@ -1,0 +1,29 @@
+{
+  "name": "@cross-platform/mini-program-renderer",
+  "version": "1.0.0",
+  "description": "小程序渲染器",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "test": "vitest"
+  },
+  "keywords": ["cross-platform", "mini-program", "weapp", "renderer"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@cross-platform/core": "workspace:*",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/react": "^18.0.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  }
+}

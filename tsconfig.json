@@ -1,22 +1,42 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "declaration": true,
-    "strict": true,
-    "esModuleInterop": true,
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES6"],
+    "allowJs": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "jsx": "react",
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "shared/*": ["packages/shared/*"],
-      "hooks/*": ["packages/hooks/*"],
-      "jsx-compile/*": ["packages/jsx-compile/*"],
-      "react-reconciler/*": ["packages/Reconciler/*"]
+      "@cross-platform/*": ["packages/*/src"],
+      "@/*": ["packages/*/src"]
     }
   },
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "include": [
+    "packages/*/src/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/*/dist",
+    "packages/*/node_modules"
+  ],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/components" },
+    { "path": "./packages/example" }
+  ]
 }

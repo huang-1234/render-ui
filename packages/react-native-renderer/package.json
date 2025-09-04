@@ -1,0 +1,32 @@
+{
+  "name": "@cross-platform/react-native-renderer",
+  "version": "1.0.0",
+  "description": "React Native 渲染器",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "test": "vitest"
+  },
+  "keywords": ["cross-platform", "react-native", "mobile", "renderer"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@cross-platform/core": "workspace:*",
+    "react": "^18.0.0",
+    "react-native": "^0.72.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-native": "^0.72.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  }
+}

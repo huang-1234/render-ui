@@ -1,0 +1,29 @@
+{
+  "name": "@cross-platform/core",
+  "version": "1.0.0",
+  "description": "跨端框架核心运行时库",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "test": "vitest"
+  },
+  "keywords": ["cross-platform", "runtime", "react", "react-native"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "classnames": "2.5.1",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/react": "^18.0.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  }
+}

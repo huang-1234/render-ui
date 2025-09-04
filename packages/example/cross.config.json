@@ -1,0 +1,27 @@
+{
+  "platforms": ["h5", "weapp", "alipay"],
+  "features": ["typescript", "router", "ui-components", "theming"],
+  "build": {
+    "outputDir": "dist",
+    "sourceMap": true,
+    "analyze": false
+  },
+  "dev": {
+    "port": 8080,
+    "host": "localhost",
+    "open": true
+  },
+  "h5": {
+    "publicPath": "/",
+    "outputDir": "dist/h5",
+    "template": "public/index.html"
+  },
+  "weapp": {
+    "outputDir": "dist/weapp",
+    "appid": "your-weapp-appid"
+  },
+  "alipay": {
+    "outputDir": "dist/alipay",
+    "appid": "your-alipay-appid"
+  }
+}

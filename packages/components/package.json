@@ -1,0 +1,33 @@
+{
+  "name": "@cross-platform/components",
+  "version": "1.0.0",
+  "description": "跨端组件库",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "test": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "keywords": ["cross-platform", "components", "react", "ui"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@cross-platform/core": "workspace:*",
+    "react": "^18.0.0",
+    "classnames": "^2.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@storybook/react": "^7.0.0",
+    "@types/react": "^18.0.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  }
+}
