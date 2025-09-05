@@ -14,8 +14,7 @@ export default {
       file: 'dist/index.js',
       format: 'cjs',
       sourcemap: true,
-      exports: 'default',
-      banner: '#!/usr/bin/env node',
+      exports: 'auto',
     }
   ],
   plugins: [

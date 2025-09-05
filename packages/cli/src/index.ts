@@ -2,9 +2,9 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import init from './commands/init';
-import build from './commands/build';
-import dev from './commands/dev';
+import init from './commands/init.js';
+import build from './commands/build.js';
+import dev from './commands/dev.js';
 
 const program = new Command();
 

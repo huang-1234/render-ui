@@ -4,15 +4,15 @@
   "description": "跨端框架示例应用",
   "main": "src/index.js",
   "scripts": {
-    "dev": "cross-cli dev",
-    "dev:h5": "cross-cli dev -p h5",
-    "dev:rn": "cross-cli dev -p rn",
-    "dev:weapp": "cross-cli dev -p weapp",
-    "build": "cross-cli build",
-    "build:h5": "cross-cli build -p h5",
-    "build:rn": "cross-cli build -p rn",
-    "build:weapp": "cross-cli build -p weapp",
-    "build:all": "cross-cli build -p all",
+    "dev": "node --no-warnings ../cli/dist/index.js dev",
+    "dev:h5": "node --no-warnings ../cli/dist/index.js dev -p h5",
+    "dev:rn": "node --no-warnings ../cli/dist/index.js dev -p rn",
+    "dev:weapp": "node --no-warnings ../cli/dist/index.js dev -p weapp",
+    "build": "node --no-warnings ../cli/dist/index.js build",
+    "build:h5": "node --no-warnings ../cli/dist/index.js build -p h5",
+    "build:rn": "node --no-warnings ../cli/dist/index.js build -p rn",
+    "build:weapp": "node --no-warnings ../cli/dist/index.js build -p weapp",
+    "build:all": "node --no-warnings ../cli/dist/index.js build -p all",
     "test": "vitest"
   },
   "keywords": [
@@ -25,7 +25,6 @@
   "dependencies": {
     "@cross-platform/components": "workspace:*",
     "@cross-platform/core": "workspace:*",
-    "cross-cli": "^1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
