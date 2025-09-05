@@ -1,0 +1,12 @@
+{
+  "platforms": ["h5", "weapp", "alipay", "tt", "rn"],
+  "features": ["typescript", "router", "state-management", "ui-components", "theming"],
+  "build": {
+    "outputDir": "dist",
+    "sourceMap": true
+  },
+  "dev": {
+    "port": 10086,
+    "host": "localhost"
+  }
+}
