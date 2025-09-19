@@ -158,12 +158,12 @@ export const useChatStore = create<ChatStore>()(
 
             // 处理流式响应
             await processStream(response.body, {
-              onText: (text) => {
+              onText: (text: string) => {
                 updateMessage(assistantMessage.id, {
                   content: get().messages.find(m => m.id === assistantMessage.id)?.content + text || text
                 });
               },
-              onToolCall: (toolCall) => {
+              onToolCall: (toolCall: any) => {
                 // 处理工具调用
                 const newToolCall: ToolCall = {
                   id: toolCall.id,

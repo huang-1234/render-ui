@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { Tool, ToolCall, ToolConfig, ToolExecutionResult } from '../types/tool';
+import { Tool, ToolConfig, ToolExecutionResult } from '../types/tool';
+import { ToolCall } from '../types/chat';
 
 interface ToolState {
   tools: Map<string, Tool>;

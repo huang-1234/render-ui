@@ -8,7 +8,7 @@ const ToolContainer = styled.div<{ status: string }>`
   margin: ${({ theme }) => theme.spacing.md} 0;
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.radii.lg};
-  border: 1px solid ${({ status, theme }) => 
+  border: 1px solid ${({ status, theme }) =>
     status === 'completed' ? theme.colors.success :
     status === 'failed' ? theme.colors.error :
     status === 'executing' ? theme.colors.warning :
@@ -38,7 +38,7 @@ const ToolIcon = styled.div<{ status: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${({ status, theme }) => 
+  background: ${({ status, theme }) =>
     status === 'completed' ? theme.colors.success :
     status === 'failed' ? theme.colors.error :
     status === 'executing' ? theme.colors.warning :
@@ -46,7 +46,7 @@ const ToolIcon = styled.div<{ status: string }>`
   };
   color: white;
   font-size: 12px;
-  
+
   ${({ status }) => status === 'executing' && `
     animation: lobeAgentPulse 1.5s infinite;
   `}
@@ -60,7 +60,7 @@ const ToolName = styled.div`
 
 const ToolStatus = styled.div<{ status: string }>`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ status, theme }) => 
+  color: ${({ status, theme }) =>
     status === 'completed' ? theme.colors.success :
     status === 'failed' ? theme.colors.error :
     status === 'executing' ? theme.colors.warning :
@@ -128,7 +128,7 @@ const CancelButton = styled.button`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.duration.fast};
-  
+
   &:hover {
     background: ${({ theme }) => theme.colors.error};
     color: white;
@@ -260,8 +260,8 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
           {tool?.inputRenderer ? (
             <tool.inputRenderer params={toolCall.params} />
           ) : (
-            <pre style={{ 
-              fontSize: '12px', 
+            <pre style={{
+              fontSize: '12px',
               margin: 0,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
@@ -283,8 +283,8 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
           {tool?.resultRenderer ? (
             <tool.resultRenderer result={toolCall.result} />
           ) : (
-            <pre style={{ 
-              fontSize: '12px', 
+            <pre style={{
+              fontSize: '12px',
               margin: 0,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',

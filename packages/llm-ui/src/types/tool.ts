@@ -43,6 +43,15 @@ export interface ToolExecutionResult<T = any> {
   metadata?: Record<string, any>;
 }
 
+export interface ToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, any>;
+  timestamp: number;
+  status: 'pending' | 'executing' | 'completed' | 'failed';
+  result?: ToolExecutionResult;
+}
+
 export interface ToolCallEvent {
   type: 'start' | 'progress' | 'complete' | 'error';
   toolName: string;

@@ -195,12 +195,12 @@ export const createChatError = (
 /**
  * 重试包装器
  */
-export const withRetry = async <T>(
+export async function withRetry<T>(
   fn: () => Promise<T>,
   maxAttempts: number = 3,
   delay: number = 1000,
   backoff: boolean = true
-): Promise<T> => {
+): Promise<T> {
   let lastError: Error;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
