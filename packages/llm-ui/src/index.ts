@@ -22,7 +22,7 @@ export * from './types/theme';
 
 // 工具函数
 export * from './utils/helpers';
-export { StreamProcessorOptions } from './utils/streamProcessor';
+export type { StreamProcessorOptions } from './utils/streamProcessor';
 export { errorHandler, ErrorCode, withRetry } from './utils/errorHandler';
 
 // 版本信息

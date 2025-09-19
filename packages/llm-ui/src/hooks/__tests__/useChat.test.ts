@@ -1,215 +1,245 @@
 import { renderHook, act } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useChat } from '../useChat';
+import { useChatStore } from '../../store/chatStore';
+import { useToolStore } from '../../store/toolStore';
+import { ErrorHandler } from '../../utils/errorHandler';
 
-// Mock the chat store
-const mockActions = {
-  appendMessage: jest.fn(),
-  updateMessage: jest.fn(),
-  deleteMessage: jest.fn(),
-  clearMessages: jest.fn(),
-  setLoading: jest.fn(),
-  setError: jest.fn(),
-  setConfig: jest.fn(),
-  submitMessage: jest.fn(),
-  regenerateResponse: jest.fn(),
-  retryMessage: jest.fn(),
-  stopGeneration: jest.fn(),
-};
+// Mock the stores
+vi.mock('../../store/chatStore');
+vi.mock('../../store/toolStore');
+vi.mock('../../utils/errorHandler');
 
-const mockStore = {
+const mockUseChatStore = vi.mocked(useChatStore);
+const mockUseToolStore = vi.mocked(useToolStore);
+const mockErrorHandler = vi.mocked(ErrorHandler);
+
+// Mock store state
+const mockChatState = {
   messages: [],
   isLoading: false,
   error: null,
-  activeToolCalls: new Map(),
-  config: {},
-  actions: mockActions,
+  addMessage: vi.fn(),
+  updateMessage: vi.fn(),
+  setLoading: vi.fn(),
+  setError: vi.fn(),
+  clearMessages: vi.fn(),
+  removeMessage: vi.fn(),
+  retryMessage: vi.fn(),
+  processStreamResponse: vi.fn(),
+  handleToolCall: vi.fn(),
+  handleError: vi.fn(),
 };
 
-jest.mock('../../store/chatStore', () => ({
-  useChatStore: () => mockStore,
-}));
+const mockToolState = {
+  tools: [],
+  toolCalls: [],
+  registerTool: vi.fn(),
+  executeTool: vi.fn(),
+  getToolCall: vi.fn(),
+};
 
 describe('useChat', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockStore.messages = [];
-    mockStore.isLoading = false;
-    mockStore.error = null;
+    vi.clearAllMocks();
+    mockUseChatStore.mockReturnValue(mockChatState);
+    mockUseToolStore.mockReturnValue(mockToolState);
   });
 
-  it('initializes with default values', () => {
+  it('should return chat state and actions', () => {
     const { result } = renderHook(() => useChat());
 
     expect(result.current.messages).toEqual([]);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(null);
+    expect(result.current.error).toBeNull();
   });
 
-  it('sets initial messages', () => {
-    const initialMessages = [
-      {
-        id: '1',
-        content: 'Hello',
-        role: 'user' as const,
-        timestamp: Date.now(),
-      },
-    ];
-
-    renderHook(() => useChat({ initialMessages }));
-
-    expect(mockActions.appendMessage).toHaveBeenCalledWith(initialMessages[0]);
-  });
-
-  it('sets config on initialization', () => {
-    const config = {
-      apiEndpoint: '/api/test',
-      model: 'gpt-4',
-    };
-
-    renderHook(() => useChat({ config }));
-
-    expect(mockActions.setConfig).toHaveBeenCalledWith(config);
-  });
-
-  it('sends message successfully', async () => {
-    mockActions.submitMessage.mockResolvedValue(undefined);
-    const onMessageSend = jest.fn();
-
-    const { result } = renderHook(() => useChat({ onMessageSend }));
-
-    await act(async () => {
-      await result.current.sendMessage('Test message');
-    });
-
-    expect(onMessageSend).toHaveBeenCalledWith('Test message');
-    expect(mockActions.submitMessage).toHaveBeenCalledWith('Test message');
-  });
-
-  it('handles send message error', async () => {
-    const error = new Error('Send failed');
-    mockActions.submitMessage.mockRejectedValue(error);
-    const onError = jest.fn();
-
-    const { result } = renderHook(() => useChat({ onError }));
-
-    await act(async () => {
-      await result.current.sendMessage('Test message');
-    });
-
-    expect(onError).toHaveBeenCalledWith(expect.any(Error));
-  });
-
-  it('regenerates response', async () => {
-    mockActions.regenerateResponse.mockResolvedValue(undefined);
-
+  it('should send message', async () => {
     const { result } = renderHook(() => useChat());
 
     await act(async () => {
-      await result.current.regenerateResponse('message-id');
+      await result.current.sendMessage('Hello');
     });
 
-    expect(mockActions.regenerateResponse).toHaveBeenCalledWith('message-id');
+    expect(mockChatState.addMessage).toHaveBeenCalled();
   });
 
-  it('retries message', async () => {
-    mockActions.retryMessage.mockResolvedValue(undefined);
-
-    const { result } = renderHook(() => useChat());
-
-    await act(async () => {
-      await result.current.retryMessage('message-id');
-    });
-
-    expect(mockActions.retryMessage).toHaveBeenCalledWith('message-id');
-  });
-
-  it('stops generation', () => {
-    const { result } = renderHook(() => useChat());
-
-    act(() => {
-      result.current.stopGeneration();
-    });
-
-    expect(mockActions.stopGeneration).toHaveBeenCalled();
-  });
-
-  it('clears messages', () => {
+  it('should clear messages', () => {
     const { result } = renderHook(() => useChat());
 
     act(() => {
       result.current.clearMessages();
     });
 
-    expect(mockActions.clearMessages).toHaveBeenCalled();
+    expect(mockChatState.clearMessages).toHaveBeenCalled();
   });
 
-  it('deletes message', () => {
+  it('should retry message', async () => {
+    const mockMessage = { id: '1', content: 'test', role: 'user' as const, timestamp: Date.now() };
+    const { result } = renderHook(() => useChat());
+
+    await act(async () => {
+      await result.current.retryMessage(mockMessage);
+    });
+
+    expect(mockChatState.retryMessage).toHaveBeenCalledWith(mockMessage);
+  });
+
+  it('should handle stream response', async () => {
+    const mockResponse = new Response('test response');
+    const { result } = renderHook(() => useChat());
+
+    await act(async () => {
+      await result.current.handleStreamResponse(mockResponse);
+    });
+
+    expect(mockChatState.processStreamResponse).toHaveBeenCalledWith(mockResponse);
+  });
+
+  it('should handle errors', () => {
+    const mockError = new Error('Test error');
     const { result } = renderHook(() => useChat());
 
     act(() => {
-      result.current.deleteMessage('message-id');
+      result.current.handleError(mockError);
     });
 
-    expect(mockActions.deleteMessage).toHaveBeenCalledWith('message-id');
+    expect(mockChatState.handleError).toHaveBeenCalledWith(mockError);
   });
 
-  it('updates message', () => {
+  it('should get message by id', () => {
+    const mockMessage = { id: '1', content: 'test', role: 'user' as const, timestamp: Date.now() };
+    mockChatState.messages = [mockMessage];
+    
     const { result } = renderHook(() => useChat());
-    const update = { content: 'Updated content' };
+
+    const message = result.current.getMessageById('1');
+    expect(message).toEqual(mockMessage);
+  });
+
+  it('should return undefined for non-existent message', () => {
+    const { result } = renderHook(() => useChat());
+
+    const message = result.current.getMessageById('non-existent');
+    expect(message).toBeUndefined();
+  });
+
+  it('should get messages by role', () => {
+    const userMessage = { id: '1', content: 'user message', role: 'user' as const, timestamp: Date.now() };
+    const assistantMessage = { id: '2', content: 'assistant message', role: 'assistant' as const, timestamp: Date.now() };
+    mockChatState.messages = [userMessage, assistantMessage];
+    
+    const { result } = renderHook(() => useChat());
+
+    const userMessages = result.current.getMessagesByRole('user');
+    expect(userMessages).toEqual([userMessage]);
+  });
+
+  it('should get last message', () => {
+    const message1 = { id: '1', content: 'first', role: 'user' as const, timestamp: Date.now() };
+    const message2 = { id: '2', content: 'second', role: 'assistant' as const, timestamp: Date.now() + 1000 };
+    mockChatState.messages = [message1, message2];
+    
+    const { result } = renderHook(() => useChat());
+
+    const lastMessage = result.current.getLastMessage();
+    expect(lastMessage).toEqual(message2);
+  });
+
+  it('should return undefined when no messages', () => {
+    const { result } = renderHook(() => useChat());
+
+    const lastMessage = result.current.getLastMessage();
+    expect(lastMessage).toBeUndefined();
+  });
+
+  it('should get message count', () => {
+    const message1 = { id: '1', content: 'first', role: 'user' as const, timestamp: Date.now() };
+    const message2 = { id: '2', content: 'second', role: 'assistant' as const, timestamp: Date.now() };
+    mockChatState.messages = [message1, message2];
+    
+    const { result } = renderHook(() => useChat());
+
+    const count = result.current.getMessageCount();
+    expect(count).toBe(2);
+  });
+
+  it('should check if chat is empty', () => {
+    const { result } = renderHook(() => useChat());
+
+    const isEmpty = result.current.isEmpty();
+    expect(isEmpty).toBe(true);
+  });
+
+  it('should check if chat has messages', () => {
+    const message = { id: '1', content: 'test', role: 'user' as const, timestamp: Date.now() };
+    mockChatState.messages = [message];
+    
+    const { result } = renderHook(() => useChat());
+
+    const isEmpty = result.current.isEmpty();
+    expect(isEmpty).toBe(false);
+  });
+
+  it('should handle message update', async () => {
+    const { result } = renderHook(() => useChat());
+
+    await act(async () => {
+      result.current.updateMessage('1', { content: 'updated' });
+    });
+
+    expect(mockChatState.updateMessage).toHaveBeenCalledWith('1', { content: 'updated' });
+  });
+
+  it('should handle message removal', () => {
+    const { result } = renderHook(() => useChat());
 
     act(() => {
-      result.current.updateMessage('message-id', update);
+      result.current.removeMessage('1');
     });
 
-    expect(mockActions.updateMessage).toHaveBeenCalledWith('message-id', update);
+    expect(mockChatState.removeMessage).toHaveBeenCalledWith('1');
   });
 
-  it('sets config', () => {
+  it('should handle error with ErrorHandler', () => {
+    const mockError = new Error('Test error');
     const { result } = renderHook(() => useChat());
-    const config = { temperature: 0.8 };
 
     act(() => {
-      result.current.setConfig(config);
+      result.current.handleError(mockError);
     });
 
-    expect(mockActions.setConfig).toHaveBeenCalledWith(config);
+    expect(mockChatState.handleError).toHaveBeenCalledWith(mockError);
   });
 
-  it('limits messages when maxMessages is set', () => {
-    const messages = Array.from({ length: 15 }, (_, i) => ({
-      id: `msg-${i}`,
-      content: `Message ${i}`,
-      role: 'user' as const,
-      timestamp: Date.now(),
-    }));
-
-    mockStore.messages = messages;
-
-    renderHook(() => useChat({ maxMessages: 10 }));
-
-    // Should delete the first 5 messages
-    expect(mockActions.deleteMessage).toHaveBeenCalledTimes(5);
-    messages.slice(0, 5).forEach((msg) => {
-      expect(mockActions.deleteMessage).toHaveBeenCalledWith(msg.id);
-    });
-  });
-
-  it('calls onMessageReceive for new messages', () => {
-    const onMessageReceive = jest.fn();
-    const { rerender } = renderHook(() => useChat({ onMessageReceive }));
-
-    // Add a new message
-    const newMessage = {
-      id: '1',
-      content: 'New message',
-      role: 'assistant' as const,
+  it('should handle tool calls', async () => {
+    const mockToolCall = {
+      id: 'tool-call-1',
+      toolId: 'test-tool',
+      name: 'test-tool',
+      arguments: { input: 'test' },
+      status: 'pending' as const,
       timestamp: Date.now(),
     };
+    
+    const { result } = renderHook(() => useChat());
 
-    mockStore.messages = [newMessage];
-    rerender();
+    await act(async () => {
+      await result.current.handleToolCall(mockToolCall);
+    });
 
-    expect(onMessageReceive).toHaveBeenCalledWith(newMessage);
+    expect(mockChatState.handleToolCall).toHaveBeenCalledWith(mockToolCall);
+  });
+
+  it('should process stream response with proper error handling', async () => {
+    const mockResponse = new Response('{"error": "test error"}', { status: 400 });
+    const { result } = renderHook(() => useChat());
+
+    await act(async () => {
+      await result.current.handleStreamResponse(mockResponse);
+    });
+
+    expect(mockChatState.processStreamResponse).toHaveBeenCalledWith(mockResponse);
   });
 
   it('handles errors from store', () => {

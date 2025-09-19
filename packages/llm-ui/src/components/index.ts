@@ -19,5 +19,5 @@ export * from './ToolManager';
 
 // 重新导出类型
 export * from '../types/chat';
-export * from '../types/tool';
+export type * from '../types/tool';
 export * from '../types/theme';

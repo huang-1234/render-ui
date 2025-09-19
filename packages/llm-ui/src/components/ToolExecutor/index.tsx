@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ToolCall } from '../../types/tool';
 import { useToolStore } from '../../store/toolStore';
 import { formatTimestamp } from '../../utils/helpers';
+import { ToolCall } from '@/types/chat';
 
 const ToolContainer = styled.div<{ status: string }>`
   margin: ${({ theme }) => theme.spacing.md} 0;

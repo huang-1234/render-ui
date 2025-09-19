@@ -1,5 +1,6 @@
 export * from './useChat';
 export * from './useTools';
+export * from './usePlatform';
 
 // 重新导出主题钩子
 export { useTheme } from '../components/ThemeProvider';

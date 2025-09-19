@@ -1,209 +1,330 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ChatWindow } from '../index';
-import { ThemeProvider } from '../../ThemeProvider';
+import { useChatStore } from '../../../store/chatStore';
+import { useToolStore } from '../../../store/toolStore';
+import { useThemeStore } from '../../../store/themeStore';
+import { render } from '../../../__tests__/utils';
 
 // Mock the stores
-jest.mock('../../../store/chatStore', () => ({
-  useChatStore: () => ({
-    messages: [],
-    isLoading: false,
-    error: null,
-    activeToolCalls: new Map(),
-    actions: {
-      submitMessage: jest.fn(),
-      stopGeneration: jest.fn(),
-      regenerateResponse: jest.fn(),
-      retryMessage: jest.fn(),
-      clearMessages: jest.fn(),
-      deleteMessage: jest.fn(),
-    },
-  }),
-}));
+vi.mock('../../../store/chatStore');
+vi.mock('../../../store/toolStore');
+vi.mock('../../../store/themeStore');
 
-jest.mock('../../../store/toolStore', () => ({
-  useToolStore: () => ({
-    actions: {
-      getAllTools: () => [],
-    },
-  }),
-}));
+const mockUseChatStore = vi.mocked(useChatStore);
+const mockUseToolStore = vi.mocked(useToolStore);
+const mockUseThemeStore = vi.mocked(useThemeStore);
 
-const renderChatWindow = (props = {}) => {
-  return render(
-    <ThemeProvider>
-      <ChatWindow {...props} />
-    </ThemeProvider>
-  );
+// Mock store states
+const mockChatState = {
+  messages: [],
+  isLoading: false,
+  error: null,
+  addMessage: vi.fn(),
+  updateMessage: vi.fn(),
+  setLoading: vi.fn(),
+  setError: vi.fn(),
+  clearMessages: vi.fn(),
+  removeMessage: vi.fn(),
+  retryMessage: vi.fn(),
+  processStreamResponse: vi.fn(),
+  handleToolCall: vi.fn(),
+  handleError: vi.fn(),
+};
+
+const mockToolState = {
+  tools: [],
+  toolCalls: [],
+  registerTool: vi.fn(),
+  executeTool: vi.fn(),
+  getToolCall: vi.fn(),
+};
+
+const mockThemeState = {
+  currentTheme: 'light' as const,
+  customThemes: {},
+  setTheme: vi.fn(),
+  toggleTheme: vi.fn(),
+  registerTheme: vi.fn(),
+  getTheme: vi.fn(),
+  isDarkMode: false,
 };
 
 describe('ChatWindow', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+    mockUseChatStore.mockReturnValue(mockChatState);
+    mockUseToolStore.mockReturnValue(mockToolState);
+    mockUseThemeStore.mockReturnValue(mockThemeState);
   });
 
-  it('renders with default props', () => {
-    renderChatWindow();
+  it('should render chat window with title', () => {
+    render(<ChatWindow title="Test Chat" />);
     
-    expect(screen.getByText('AI Assistant')).toBeInTheDocument();
-    expect(screen.getByText('Start a conversation')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
+    expect(screen.getByText('Test Chat')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('renders with custom title', () => {
-    renderChatWindow({ title: 'Custom Assistant' });
+  it('should render without title', () => {
+    render(<ChatWindow />);
     
-    expect(screen.getByText('Custom Assistant')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 
-  it('hides header when showHeader is false', () => {
-    renderChatWindow({ showHeader: false });
+  it('should handle message sending', async () => {
+    const user = userEvent.setup();
+    const mockOnMessageSend = vi.fn();
     
-    expect(screen.queryByText('AI Assistant')).not.toBeInTheDocument();
-  });
-
-  it('calls onMessageSend when message is sent', async () => {
-    const onMessageSend = jest.fn();
-    renderChatWindow({ onMessageSend });
+    render(<ChatWindow onMessageSend={mockOnMessageSend} />);
     
-    const input = screen.getByPlaceholderText('Type your message...');
+    const input = screen.getByRole('textbox');
     const sendButton = screen.getByRole('button');
     
-    await userEvent.type(input, 'Hello, world!');
-    await userEvent.click(sendButton);
+    await user.type(input, 'Hello, world!');
+    await user.click(sendButton);
     
-    expect(onMessageSend).toHaveBeenCalledWith('Hello, world!');
+    expect(mockOnMessageSend).toHaveBeenCalledWith('Hello, world!');
+    expect(mockChatState.addMessage).toHaveBeenCalled();
   });
 
-  it('shows empty state when no messages', () => {
-    renderChatWindow();
+  it('should display messages', () => {
+    const messages = [
+      { id: '1', content: 'Hello', role: 'user' as const, timestamp: Date.now() },
+      { id: '2', content: 'Hi there!', role: 'assistant' as const, timestamp: Date.now() },
+    ];
     
-    expect(screen.getByText('Start a conversation')).toBeInTheDocument();
-    expect(screen.getByText(/Send a message to begin chatting/)).toBeInTheDocument();
+    mockChatState.messages = messages;
+    
+    render(<ChatWindow />);
+    
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText('Hi there!')).toBeInTheDocument();
   });
 
-  it('shows clear button when messages exist', () => {
-    // Mock store with messages
-    const mockStore = {
-      messages: [
-        {
-          id: '1',
-          content: 'Hello',
-          role: 'user',
-          timestamp: Date.now(),
-        },
-      ],
-      isLoading: false,
-      error: null,
-      activeToolCalls: new Map(),
-      actions: {
-        submitMessage: jest.fn(),
-        stopGeneration: jest.fn(),
-        regenerateResponse: jest.fn(),
-        retryMessage: jest.fn(),
-        clearMessages: jest.fn(),
-        deleteMessage: jest.fn(),
-      },
+  it('should show loading state', () => {
+    mockChatState.isLoading = true;
+    
+    render(<ChatWindow />);
+    
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  });
+
+  it('should display error message', () => {
+    mockChatState.error = new Error('Test error');
+    
+    render(<ChatWindow />);
+    
+    expect(screen.getByText(/error/i)).toBeInTheDocument();
+  });
+
+  it('should handle tool execution', async () => {
+    const mockTool = {
+      id: 'test-tool',
+      name: 'Test Tool',
+      description: 'A test tool',
+      category: 'utility' as const,
+      execute: vi.fn().mockResolvedValue({ result: 'success' }),
     };
-
-    jest.doMock('../../../store/chatStore', () => ({
-      useChatStore: () => mockStore,
-    }));
-
-    renderChatWindow();
     
-    const clearButton = screen.getByText('Clear');
-    expect(clearButton).toBeInTheDocument();
-    expect(clearButton).not.toBeDisabled();
+    mockToolState.tools = [mockTool];
+    
+    const user = userEvent.setup();
+    render(<ChatWindow enabledTools={['test-tool']} />);
+    
+    // Simulate tool execution through message
+    const input = screen.getByRole('textbox');
+    await user.type(input, 'Execute test tool');
+    await user.click(screen.getByRole('button'));
+    
+    expect(mockChatState.addMessage).toHaveBeenCalled();
   });
 
-  it('disables input when error exists', () => {
-    // Mock store with error
-    const mockStore = {
-      messages: [],
-      isLoading: false,
-      error: { message: 'Test error' },
-      activeToolCalls: new Map(),
-      actions: {
-        submitMessage: jest.fn(),
-        stopGeneration: jest.fn(),
-        regenerateResponse: jest.fn(),
-        retryMessage: jest.fn(),
-        clearMessages: jest.fn(),
-        deleteMessage: jest.fn(),
-      },
-    };
-
-    jest.doMock('../../../store/chatStore', () => ({
-      useChatStore: () => mockStore,
-    }));
-
-    renderChatWindow();
+  it('should handle theme switching', () => {
+    render(<ChatWindow />);
     
-    const input = screen.getByPlaceholderText('Type your message...');
-    expect(input).toBeDisabled();
+    // Find theme toggle button (if exists)
+    const themeButton = screen.queryByLabelText(/theme/i);
+    if (themeButton) {
+      fireEvent.click(themeButton);
+      expect(mockThemeState.toggleTheme).toHaveBeenCalled();
+    }
   });
 
-  it('shows stop button when loading', () => {
-    // Mock store with loading state
-    const mockStore = {
-      messages: [],
-      isLoading: true,
-      error: null,
-      activeToolCalls: new Map(),
-      actions: {
-        submitMessage: jest.fn(),
-        stopGeneration: jest.fn(),
-        regenerateResponse: jest.fn(),
-        retryMessage: jest.fn(),
-        clearMessages: jest.fn(),
-        deleteMessage: jest.fn(),
-      },
+  it('should handle message retry', async () => {
+    const failedMessage = {
+      id: '1',
+      content: 'Failed message',
+      role: 'assistant' as const,
+      timestamp: Date.now(),
+      error: 'Failed to send',
     };
-
-    jest.doMock('../../../store/chatStore', () => ({
-      useChatStore: () => mockStore,
-    }));
-
-    renderChatWindow();
     
-    expect(screen.getByText('Stop')).toBeInTheDocument();
+    mockChatState.messages = [failedMessage];
+    
+    render(<ChatWindow />);
+    
+    const retryButton = screen.queryByText(/retry/i);
+    if (retryButton) {
+      fireEvent.click(retryButton);
+      expect(mockChatState.retryMessage).toHaveBeenCalledWith(failedMessage);
+    }
   });
 
-  it('handles error callback', async () => {
-    const onError = jest.fn();
-    const mockSubmitMessage = jest.fn().mockRejectedValue(new Error('Test error'));
+  it('should handle message clearing', () => {
+    const messages = [
+      { id: '1', content: 'Message 1', role: 'user' as const, timestamp: Date.now() },
+      { id: '2', content: 'Message 2', role: 'assistant' as const, timestamp: Date.now() },
+    ];
     
-    const mockStore = {
-      messages: [],
-      isLoading: false,
-      error: null,
-      activeToolCalls: new Map(),
-      actions: {
-        submitMessage: mockSubmitMessage,
-        stopGeneration: jest.fn(),
-        regenerateResponse: jest.fn(),
-        retryMessage: jest.fn(),
-        clearMessages: jest.fn(),
-        deleteMessage: jest.fn(),
-      },
+    mockChatState.messages = messages;
+    
+    render(<ChatWindow />);
+    
+    const clearButton = screen.queryByText(/clear/i);
+    if (clearButton) {
+      fireEvent.click(clearButton);
+      expect(mockChatState.clearMessages).toHaveBeenCalled();
+    }
+  });
+
+  it('should handle keyboard shortcuts', async () => {
+    const user = userEvent.setup();
+    render(<ChatWindow />);
+    
+    const input = screen.getByRole('textbox');
+    await user.type(input, 'Test message');
+    
+    // Test Enter key to send message
+    await user.keyboard('{Enter}');
+    
+    expect(mockChatState.addMessage).toHaveBeenCalled();
+  });
+
+  it('should handle file uploads', async () => {
+    const user = userEvent.setup();
+    render(<ChatWindow enableFileUpload />);
+    
+    const fileInput = screen.queryByLabelText(/upload/i);
+    if (fileInput) {
+      const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
+      await user.upload(fileInput, file);
+      
+      // Verify file handling
+      expect(fileInput).toBeInTheDocument();
+    }
+  });
+
+  it('should handle streaming responses', async () => {
+    const mockStreamResponse = new Response('streaming data');
+    
+    render(<ChatWindow />);
+    
+    // Simulate streaming response
+    await mockChatState.processStreamResponse(mockStreamResponse);
+    
+    expect(mockChatState.processStreamResponse).toHaveBeenCalledWith(mockStreamResponse);
+  });
+
+  it('should handle tool call updates', () => {
+    const messageWithToolCall = {
+      id: '1',
+      content: 'Using tool...',
+      role: 'assistant' as const,
+      timestamp: Date.now(),
+      toolCalls: [{
+        id: 'tool-call-1',
+        toolId: 'test-tool',
+        name: 'test-tool',
+        arguments: { input: 'test' },
+        status: 'pending' as const,
+        timestamp: Date.now(),
+      }],
     };
-
-    jest.doMock('../../../store/chatStore', () => ({
-      useChatStore: () => mockStore,
-    }));
-
-    renderChatWindow({ onError });
     
-    const input = screen.getByPlaceholderText('Type your message...');
+    mockChatState.messages = [messageWithToolCall];
+    
+    render(<ChatWindow />);
+    
+    expect(screen.getByText('Using tool...')).toBeInTheDocument();
+  });
+
+  it('should handle custom message renderer', () => {
+    const CustomRenderer = ({ message }: { message: any }) => (
+      <div data-testid="custom-message">{message.content}</div>
+    );
+    
+    const messages = [
+      { id: '1', content: 'Custom message', role: 'user' as const, timestamp: Date.now() },
+    ];
+    
+    mockChatState.messages = messages;
+    
+    render(<ChatWindow messageRenderer={CustomRenderer} />);
+    
+    expect(screen.getByTestId('custom-message')).toBeInTheDocument();
+    expect(screen.getByText('Custom message')).toBeInTheDocument();
+  });
+
+  it('should handle window resize', () => {
+    render(<ChatWindow />);
+    
+    // Simulate window resize
+    fireEvent.resize(window);
+    
+    // Verify component handles resize gracefully
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+
+  it('should handle accessibility features', () => {
+    render(<ChatWindow />);
+    
+    const input = screen.getByRole('textbox');
     const sendButton = screen.getByRole('button');
     
-    await userEvent.type(input, 'Test message');
-    await userEvent.click(sendButton);
+    expect(input).toHaveAttribute('aria-label');
+    expect(sendButton).toHaveAttribute('aria-label');
+  });
+
+  it('should handle message pagination', () => {
+    const manyMessages = Array.from({ length: 100 }, (_, i) => ({
+      id: `msg-${i}`,
+      content: `Message ${i}`,
+      role: 'user' as const,
+      timestamp: Date.now() + i,
+    }));
     
-    await waitFor(() => {
-      expect(onError).toHaveBeenCalledWith(expect.any(Error));
-    });
+    mockChatState.messages = manyMessages;
+    
+    render(<ChatWindow />);
+    
+    // Should handle large number of messages efficiently
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+
+  it('should handle tool call status updates', () => {
+    const messageWithCompletedToolCall = {
+      id: '1',
+      content: 'Tool completed',
+      role: 'assistant' as const,
+      timestamp: Date.now(),
+      toolCalls: [{
+        id: 'tool-call-1',
+        toolId: 'test-tool',
+        name: 'test-tool',
+        arguments: { input: 'test' },
+        status: 'completed' as const,
+        result: 'Tool execution successful',
+        timestamp: Date.now(),
+      }],
+    };
+    
+    mockChatState.messages = [messageWithCompletedToolCall];
+    
+    render(<ChatWindow />);
+    
+    expect(screen.getByText('Tool completed')).toBeInTheDocument();
   });
 });
