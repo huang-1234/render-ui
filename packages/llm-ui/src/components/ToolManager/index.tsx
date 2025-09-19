@@ -336,7 +336,7 @@ export const ToolManager: React.FC<ToolManagerProps> = ({
             <FilterTab
               key={category}
               active={activeFilter === category}
-              onClick={() => setActiveFilter(category)}
+              onClick={() => setActiveFilter(category || 'all')}
             >
               {category} ({allTools.filter(t => t.category === category).length})
             </FilterTab>

@@ -290,7 +290,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         )}
 
         {maxLength && (
-          <CharacterCount isNearLimit={isNearLimit}>
+          <CharacterCount isNearLimit={Boolean(isNearLimit)}>
             {value.length}/{maxLength}
           </CharacterCount>
         )}

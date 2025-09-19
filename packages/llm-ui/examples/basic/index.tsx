@@ -5,7 +5,7 @@ import {
   ThemeProvider,
   ThemeToggle,
   registerTool,
-} from '@lobe/ui-agent';
+} from '../../src';
 import { z } from 'zod';
 
 // 注册自定义工具

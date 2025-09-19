@@ -10,8 +10,8 @@ export default defineConfig({
   external: [
     'react',
     'react-dom',
+    'styled-components',
     '@lobehub/ui',
-    'styled-components'
   ],
   esbuildOptions(options) {
     options.jsx = 'automatic';

@@ -105,8 +105,40 @@ export class StreamProcessor {
 }
 
 // export processStream
-export const processStream = new StreamProcessor()
 
 export function createStreamProcessor(options: StreamProcessorOptions = {}): StreamProcessor {
   return new StreamProcessor(options);
+}
+
+export async function processStream(
+  stream: ReadableStream<Uint8Array>,
+  options: {
+    onText: (text: string) => void;
+    onToolCall: (toolCall: any) => void;
+    onComplete: () => void;
+    onError: (error: any) => void;
+  }
+): Promise<void> {
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  const processor = createStreamProcessor(options);
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) {
+        processor.flush();
+        options.onComplete();
+        break;
+      }
+
+      const chunk = decoder.decode(value, { stream: true });
+      processor.process(chunk);
+    }
+  } catch (error) {
+    options.onError(error);
+  } finally {
+    reader.releaseLock();
+  }
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useToolStore } from '../store/toolStore';
-import { Tool, ToolCall, ToolConfig, ToolExecutionResult } from '../types/tool';
+import { Tool, ToolConfig, ToolExecutionResult } from '../types/tool';
+import { ToolCall } from '../types/chat';
 import { errorHandler } from '../utils/errorHandler';
 
 export interface UseToolsOptions {
