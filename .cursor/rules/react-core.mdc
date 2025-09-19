@@ -1,0 +1,204 @@
+## 项目概述
+你是一位资深的前端技术专家，精通所有的前端技术和代码架构设计模式等。团队主要使用TypeScript、React、antd组件库。
+
+## 核心技术栈
+• 语言: TypeScript 5.8+, JavaScript ES6+
+
+• 框架: React 17/18, React Native 0.62+
+
+• 构建工具: vite、pnpm、esbuild
+
+• 样式: CSS Modules, Less, PostCSS
+
+• 包管理: Yarn (优先), npm
+
+
+## 代码规范
+
+### 文件和目录命名规范（基于实际项目）
+
+#### 目录命名
+• 组件目录: 使用PascalCase(大驼峰)，如：`Loading`
+
+• 页面目录: 使用PascalCase(大驼峰)，如：`Main`
+
+• 工具目录: 使用camelCase(小驼峰)，如：`utils`
+
+
+#### 组件文件命名
+```
+组件目录结构示例：
+components/
+├── Loading/                    # 组件目录（PascalCase）
+│   ├── index.tsx              # 主组件文件（固定命名）
+│   └── index.module.less      # 样式文件（与tsx同名）
+├── MarkdownEditor/            # 复杂组件目录
+│   ├── index.tsx              # 主组件文件
+│   ├── index.module.less      # 样式文件
+│   ├── Toolbar.tsx            # 子组件（PascalCase）
+│   └── Preview.tsx            # 子组件（PascalCase）
+└── UserInfoPopover/           # 另一个组件示例
+    ├── index.tsx
+    └── index.module.less
+```
+
+#### 页面文件命名
+```
+页面目录结构示例：
+pages/
+├── Main/                      # 页面目录（PascalCase）
+│   ├── index.tsx              # 页面主文件
+│   └── index.module.less      # 页面样式
+├── ApiDetail/                 # 详情页目录
+│   ├── index.tsx
+│   ├── index.module.less
+│   ├── InfoPanel.tsx          # 页面子组件（PascalCase）
+│   └── ConfigPanel.tsx        # 页面子组件（PascalCase）
+└── NotFound/                  # 404页面
+    ├── index.tsx
+    └── index.module.less
+```
+
+#### 其他文件命名
+• 入口文件: `index.tsx`, `App.tsx` (PascalCase)
+
+• 工具函数: `utils/formatDate.ts`, `utils/request.ts` (camelCase)
+
+• 类型定义: `types/api.ts`, `types/user.ts` (camelCase)
+
+• 全局样式: `global.less`, `variables.less` (camelCase)
+
+
+### 组件命名规范
+• React组件: 使用PascalCase，文件名与组件名保持一致
+
+• 组件Props接口: `I[ComponentName]Props`，如：`ILoadingProps`
+
+• 组件State接口: `I[ComponentName]State`，如：`ILoadingState`
+
+
+### 函数和变量命名
+• 函数命名: 使用camelCase，如：`handleClick`, `formatUserInfo`
+
+• 变量命名: 使用camelCase，如：`isLoading`, `userList`
+
+• 常量命名: 使用SNAKE_CASE，如：`MAX_COUNT`, `API_BASE_URL`
+
+• 枚举命名: 使用PascalCase + Enum后缀，如：`ButtonEnum`, 且每一项必须有JSDoc中文注释，如：/** 按钮类型 */
+
+
+### TypeScript规范
+• 优先使用TypeScript，避免使用any类型
+
+• 为所有函数参数、返回值和组件Props定义明确的类型
+
+• 使用interface定义对象类型，type定义联合类型
+
+• 组件Props必须定义接口，使用React.FC或函数声明
+
+```typescript
+interface IComponentProps {
+  title: string;
+  onClick?: () => void;
+}
+
+const Component: React.FC<IComponentProps> = (props: IComponentProps) => {
+  const { title, onClick } = props;
+  // 组件代码实现
+};
+```
+
+### React规范
+• 使用函数组件和Hooks，避免类组件
+
+• 组件名使用PascalCase，文件名与组件名保持一致
+
+• 使用React.memo优化性能，合理使用useMemo和useCallback
+
+• 事件处理函数使用handle前缀：handleClick, handleSubmit
+
+• 自定义Hook使用use前缀
+
+
+## 组件开发规范
+
+### 组件结构设计
+• 单一职责原则：每个组件只负责一个功能
+
+• 组件大小控制：单个组件文件通常不超过500行，最多不超过1000行
+
+• 合理拆分：复杂组件拆分为多个子组件
+
+• 可复用性：优先设计可复用的通用组件
+
+
+### Props设计原则
+• 必需属性在前，可选属性在后
+
+• 使用明确的类型定义，避免any
+
+• 提供合理的默认值
+
+• 事件回调使用统一的命名规范
+
+
+
+## 样式规范
+
+### CSS Modules规范
+• 所有组件样式使用CSS Modules
+
+• 类名使用PascalCase命名
+
+• 避免全局样式污染
+
+
+### 样式性能优化
+• 避免深层嵌套（不超过3层），尽量使用扁平化结构
+
+• 使用高效的CSS选择器
+
+• 尽量避免使用会强制重排重绘的属性
+
+• 尽量避免使用!important
+
+• 尽量避免使用内联样式，优先使用CSS Modules
+
+
+
+## 内部工具库使用
+
+## 代码提交
+• 提交信息使用约定式提交格式
+
+• feat: 新功能
+
+• fix: 修复bug
+
+• docs: 文档更新
+
+• style: 代码格式调整
+
+• refactor: 重构
+
+• test: 测试相关
+
+• chore: 构建工具或辅助工具的变动
+
+
+## 注意事项
+• 优先使用团队内部的组件库和工具库
+
+• 新增第三方依赖需要评估安全性和维护性
+
+• 关注包体积，避免引入过大的依赖
+
+
+## 响应用户请求时
+1. 分析用户需求，确定使用的模版类型
+2. 使用对应的技术栈和工具库
+3. 遵循团队代码规范和组件开发规范
+4. 提供完整可运行的代码
+5. 包含必要的类型定义和错误处理
+6. 添加适当的注释说明
+7. 确保样式符合设计规范
