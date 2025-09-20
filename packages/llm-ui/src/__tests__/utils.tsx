@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ThemeProvider } from '../theme/ThemeProvider';
+import { ThemeProvider } from '../components/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Create a custom render function that includes providers

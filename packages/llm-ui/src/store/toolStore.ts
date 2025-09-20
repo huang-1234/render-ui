@@ -4,7 +4,8 @@ import { Tool, ToolConfig, ToolExecutionResult } from '../types/tool';
 import { ToolCall } from '../types/chat';
 
 interface ToolState {
-  tools: Map<string, Tool>;
+  tools: Tool[];
+  toolCalls: ToolCall[];
   executingCalls: Map<string, ToolCall>;
   executionHistory: ToolCall[];
   config: ToolConfig;
@@ -18,6 +19,14 @@ interface ToolActions {
   getToolsByCategory: (category: string) => Tool[];
   searchTools: (query: string) => Tool[];
   executeTool: (name: string, params: any, context?: any) => Promise<ToolExecutionResult>;
+  addToolCall: (toolCall: ToolCall) => void;
+  getToolCall: (id: string) => ToolCall | undefined;
+  updateToolCall: (id: string, updates: Partial<ToolCall>) => void;
+  clearToolCalls: () => void;
+  getPendingToolCalls?: () => ToolCall[];
+  getCompletedToolCalls?: () => ToolCall[];
+  validateToolArguments?: (toolId: string, args: any) => boolean;
+  getExecutionMetrics?: () => any;
   cancelExecution: (callId: string) => void;
   clearHistory: () => void;
   setConfig: (config: Partial<ToolConfig>) => void;

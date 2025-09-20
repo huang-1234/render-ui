@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useToolStore } from '../toolStore';
-import type { Tool, ToolCall } from '../../types/tool';
+import type { Tool } from '../../types/tool';
+
+import { ToolCall } from '@/types/chat';
 
 describe('toolStore', () => {
   beforeEach(() => {
@@ -31,7 +33,7 @@ describe('toolStore', () => {
 
   it('should initialize with empty state', () => {
     const state = useToolStore.getState();
-    
+
     expect(state.tools).toEqual([]);
     expect(state.toolCalls).toEqual([]);
   });
@@ -126,7 +128,7 @@ describe('toolStore', () => {
     const store = useToolStore.getState();
 
     store.addToolCall(mockToolCall);
-    store.updateToolCall('tool-call-1', { 
+    store.updateToolCall('tool-call-1', {
       status: 'completed',
       result: 'success',
     });
@@ -189,8 +191,8 @@ describe('toolStore', () => {
 
   it('should handle tool call with error', () => {
     const store = useToolStore.getState();
-    const errorCall = { 
-      ...mockToolCall, 
+    const errorCall = {
+      ...mockToolCall,
       status: 'failed' as const,
       error: 'Execution failed',
     };
