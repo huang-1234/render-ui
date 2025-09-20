@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useToolStore } from '../toolStore';
 import type { Tool } from '../../types/tool';
+import { z } from 'zod';
 
-import { ToolCall } from '@/types/chat';
+import { ToolCall } from '../../types/chat';
 
 describe('toolStore', () => {
   beforeEach(() => {
@@ -15,20 +16,21 @@ describe('toolStore', () => {
   });
 
   const mockTool: Tool = {
-    id: 'test-tool',
-    name: 'Test Tool',
+    name: 'test-tool',
     description: 'A test tool for testing',
     category: 'utility',
+    parameters: z.object({
+      input: z.string().optional()
+    }),
     execute: vi.fn().mockResolvedValue({ result: 'test result' }),
   };
 
   const mockToolCall: ToolCall = {
     id: 'tool-call-1',
-    toolId: 'test-tool',
-    name: 'test-tool',
-    arguments: { input: 'test' },
+    toolName: 'test-tool',
+    params: { input: 'test' },
     status: 'pending',
-    timestamp: Date.now(),
+    startTime: Date.now(),
   };
 
   it('should initialize with empty state', () => {
@@ -62,7 +64,7 @@ describe('toolStore', () => {
     const store = useToolStore.getState();
 
     store.registerTool(mockTool);
-    store.unregisterTool('test-tool');
+    store.unregisterTool(mockTool.name);
 
     const state = useToolStore.getState();
     expect(state.tools).toHaveLength(0);
@@ -75,7 +77,7 @@ describe('toolStore', () => {
 
     store.registerTool(tool);
 
-    const result = await store.executeTool('test-tool', { input: 'test' });
+    const result = await store.executeTool(mockTool.name, { input: 'test' });
 
     expect(mockExecute).toHaveBeenCalledWith({ input: 'test' });
     expect(result).toEqual({ result: 'success' });
@@ -89,7 +91,7 @@ describe('toolStore', () => {
 
     store.registerTool(tool);
 
-    await expect(store.executeTool('test-tool', { input: 'test' })).rejects.toThrow(error);
+    await expect(store.executeTool(mockTool.name, { input: 'test' })).rejects.toThrow(error);
   });
 
   it('should throw error when executing non-existent tool', async () => {
@@ -153,12 +155,12 @@ describe('toolStore', () => {
   it('should get tools by category', () => {
     const store = useToolStore.getState();
     const utilityTool = { ...mockTool, category: 'utility' as const };
-    const searchTool = { ...mockTool, id: 'search-tool', category: 'search' as const };
+    const searchTool = { ...mockTool, name: 'search-tool', category: 'search' as const };
 
     store.registerTool(utilityTool);
     store.registerTool(searchTool);
 
-    const utilityTools = store.getToolsByCategory?.('utility') || [];
+    const utilityTools = store.getToolsByCategory('utility');
     expect(utilityTools).toHaveLength(1);
     expect(utilityTools[0].category).toBe('utility');
   });
@@ -171,7 +173,7 @@ describe('toolStore', () => {
     store.addToolCall(pendingCall);
     store.addToolCall(completedCall);
 
-    const pendingCalls = store.getPendingToolCalls?.() || [];
+    const pendingCalls = store.getPendingToolCalls ? store.getPendingToolCalls() : [];
     expect(pendingCalls).toHaveLength(1);
     expect(pendingCalls[0].status).toBe('pending');
   });
@@ -184,7 +186,7 @@ describe('toolStore', () => {
     store.addToolCall(pendingCall);
     store.addToolCall(completedCall);
 
-    const completedCalls = store.getCompletedToolCalls?.() || [];
+    const completedCalls = store.getCompletedToolCalls ? store.getCompletedToolCalls() : [];
     expect(completedCalls).toHaveLength(1);
     expect(completedCalls[0].status).toBe('completed');
   });
@@ -208,33 +210,29 @@ describe('toolStore', () => {
     const store = useToolStore.getState();
     const toolWithSchema = {
       ...mockTool,
-      schema: {
-        type: 'object',
-        properties: {
-          input: { type: 'string' },
-        },
-        required: ['input'],
-      },
+      parameters: z.object({
+        input: z.string()
+      }),
     };
 
     store.registerTool(toolWithSchema);
 
     // This would depend on actual validation implementation
-    const isValid = store.validateToolArguments?.('test-tool', { input: 'test' });
+    const isValid = store.validateToolArguments ? store.validateToolArguments(mockTool.name, { input: 'test' }) : false;
     expect(isValid).toBe(true);
   });
 
   it('should handle concurrent tool executions', async () => {
     const store = useToolStore.getState();
-    const tool1 = { ...mockTool, id: 'tool-1', execute: vi.fn().mockResolvedValue({ result: 'result-1' }) };
-    const tool2 = { ...mockTool, id: 'tool-2', execute: vi.fn().mockResolvedValue({ result: 'result-2' }) };
+    const tool1 = { ...mockTool, name: 'tool-1', execute: vi.fn().mockResolvedValue({ result: 'result-1' }) };
+    const tool2 = { ...mockTool, name: 'tool-2', execute: vi.fn().mockResolvedValue({ result: 'result-2' }) };
 
     store.registerTool(tool1);
     store.registerTool(tool2);
 
     const [result1, result2] = await Promise.all([
-      store.executeTool('tool-1', { input: 'test1' }),
-      store.executeTool('tool-2', { input: 'test2' }),
+      store.executeTool(tool1.name, { input: 'test1' }),
+      store.executeTool(tool2.name, { input: 'test2' }),
     ]);
 
     expect(result1).toEqual({ result: 'result-1' });
@@ -249,7 +247,7 @@ describe('toolStore', () => {
     store.addToolCall(call1);
     store.addToolCall(call2);
 
-    const metrics = store.getExecutionMetrics?.() || {};
+    const metrics = store.getExecutionMetrics ? store.getExecutionMetrics() : { totalExecutions: 0 };
     expect(metrics.totalExecutions).toBe(2);
   });
 });

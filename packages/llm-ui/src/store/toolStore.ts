@@ -32,9 +32,7 @@ interface ToolActions {
   setConfig: (config: Partial<ToolConfig>) => void;
 }
 
-interface ToolStore extends ToolState {
-  actions: ToolActions;
-}
+interface ToolStore extends ToolState, ToolActions {}
 
 const defaultConfig: ToolConfig = {
   timeout: 30000,
@@ -48,65 +46,68 @@ const defaultConfig: ToolConfig = {
 
 export const useToolStore = create<ToolStore>()(
   immer((set, get) => ({
-    tools: new Map(),
+    tools: [],
+    toolCalls: [],
     executingCalls: new Map(),
     executionHistory: [],
     config: defaultConfig,
-
-    actions: {
-      registerTool: (tool: Tool) => {
-        set((state) => {
-          state.tools.set(tool.name, tool);
-        });
-      },
-
-      unregisterTool: (name: string) => {
-        set((state) => {
-          state.tools.delete(name);
-        });
-      },
-
-      getTool: (name: string) => {
-        return get().tools.get(name);
-      },
-
-      getAllTools: () => {
-        const { config } = get();
-        const allTools = Array.from(get().tools.values());
-        
-        return allTools.filter(tool => {
-          // 检查是否在阻止列表中
-          if (config.blockedTools && config.blockedTools.includes(tool.name)) {
-            return false;
-          }
-          
-          // 检查是否在允许列表中（如果设置了允许列表）
-          if (config.allowedTools && config.allowedTools.length > 0) {
-            return config.allowedTools.includes(tool.name);
-          }
-          
-          return true;
-        });
-      },
-
-      getToolsByCategory: (category: string) => {
-        return get().actions.getAllTools().filter(tool => tool.category === category);
-      },
-
-      searchTools: (query: string) => {
-        const searchTerm = query.toLowerCase();
-        return get().actions.getAllTools().filter(tool => 
-          tool.name.toLowerCase().includes(searchTerm) ||
-          tool.description.toLowerCase().includes(searchTerm) ||
-          (tool.tags && tool.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
-        );
-      },
-
-      executeTool: async (name: string, params: any, context?: any): Promise<ToolExecutionResult> => {
-        const tool = get().actions.getTool(name);
-        if (!tool) {
-          throw new Error(`Tool "${name}" not found`);
+    registerTool: (tool: Tool) => {
+      set((state) => {
+        // 检查是否已存在相同名称的工具
+        const exists = state.tools.some(t => t.name === tool.name);
+        if (!exists) {
+          state.tools.push(tool);
         }
+      });
+    },
+
+    unregisterTool: (name: string) => {
+      set((state) => {
+        state.tools = state.tools.filter(tool => tool.name !== name);
+      });
+    },
+
+    getTool: (name: string) => {
+      return get().tools.find(tool => tool.name === name);
+    },
+
+    getAllTools: () => {
+      const { config } = get();
+      const allTools = get().tools;
+
+      return allTools.filter(tool => {
+        // 检查是否在阻止列表中
+        if (config.blockedTools && config.blockedTools.includes(tool.name)) {
+          return false;
+        }
+
+        // 检查是否在允许列表中（如果设置了允许列表）
+        if (config.allowedTools && config.allowedTools.length > 0) {
+          return config.allowedTools.includes(tool.name);
+        }
+
+        return true;
+      });
+    },
+
+    getToolsByCategory: (category: string) => {
+      return get().getAllTools().filter(tool => tool.category === category);
+    },
+
+    searchTools: (query: string) => {
+      const searchTerm = query.toLowerCase();
+      return get().getAllTools().filter(tool =>
+        tool.name.toLowerCase().includes(searchTerm) ||
+        tool.description.toLowerCase().includes(searchTerm) ||
+        (tool.tags && tool.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+      );
+    },
+
+    executeTool: async (name: string, params: any, context?: any): Promise<ToolExecutionResult> => {
+      const tool = get().getTool(name);
+      if (!tool) {
+        throw new Error(`Tool not found: ${name}`);
+      }
 
         const callId = `${name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const startTime = Date.now();
@@ -154,7 +155,7 @@ export const useToolStore = create<ToolStore>()(
           set((state) => {
             state.executingCalls.delete(callId);
             state.executionHistory.unshift(completedCall);
-            
+
             // 限制历史记录数量
             if (state.executionHistory.length > 100) {
               state.executionHistory = state.executionHistory.slice(0, 100);
@@ -202,31 +203,91 @@ export const useToolStore = create<ToolStore>()(
         }
       },
 
-      cancelExecution: (callId: string) => {
-        set((state) => {
-          const call = state.executingCalls.get(callId);
-          if (call) {
-            call.status = 'failed';
-            call.error = 'Execution cancelled';
-            call.endTime = Date.now();
-            
-            state.executingCalls.delete(callId);
-            state.executionHistory.unshift(call);
+    cancelExecution: (callId: string) => {
+      set((state) => {
+        const call = state.executingCalls.get(callId);
+        if (call) {
+          call.status = 'failed';
+          call.error = 'Execution cancelled';
+          call.endTime = Date.now();
+
+          state.executingCalls.delete(callId);
+          state.executionHistory.unshift(call);
+        }
+      });
+    },
+
+    clearHistory: () => {
+      set((state) => {
+        state.executionHistory = [];
+      });
+    },
+
+    setConfig: (config: Partial<ToolConfig>) => {
+      set((state) => {
+        Object.assign(state.config, config);
+      });
+    },
+
+    // 实现测试中需要的方法
+    addToolCall: (toolCall: ToolCall) => {
+      set((state) => {
+        state.toolCalls.push(toolCall);
+      });
+    },
+
+    getToolCall: (id: string) => {
+      return get().toolCalls.find(call => call.id === id);
+    },
+
+    updateToolCall: (id: string, updates: Partial<ToolCall>) => {
+      set((state) => {
+        const callIndex = state.toolCalls.findIndex(call => call.id === id);
+        if (callIndex !== -1) {
+          state.toolCalls[callIndex] = { ...state.toolCalls[callIndex], ...updates };
+        }
+      });
+    },
+
+    clearToolCalls: () => {
+      set((state) => {
+        state.toolCalls = [];
+      });
+    },
+
+    getPendingToolCalls: () => {
+      return get().toolCalls.filter(call => call.status === 'pending');
+    },
+
+    getCompletedToolCalls: () => {
+      return get().toolCalls.filter(call => call.status === 'completed');
+    },
+
+    validateToolArguments: (toolId: string, args: any) => {
+      const tool = get().getTool(toolId);
+      if (!tool || !tool.parameters) return false;
+
+      try {
+        tool.parameters.parse(args);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+
+    getExecutionMetrics: () => {
+      const calls = get().toolCalls;
+      return {
+        totalExecutions: calls.length,
+        successfulExecutions: calls.filter(call => call.status === 'completed').length,
+        failedExecutions: calls.filter(call => call.status === 'failed').length,
+        averageExecutionTime: calls.reduce((sum, call) => {
+          if (call.startTime && call.endTime) {
+            return sum + (call.endTime - call.startTime);
           }
-        });
-      },
-
-      clearHistory: () => {
-        set((state) => {
-          state.executionHistory = [];
-        });
-      },
-
-      setConfig: (config: Partial<ToolConfig>) => {
-        set((state) => {
-          Object.assign(state.config, config);
-        });
-      },
+          return sum;
+        }, 0) / (calls.filter(call => call.startTime && call.endTime).length || 1),
+      };
     },
   }))
 );
