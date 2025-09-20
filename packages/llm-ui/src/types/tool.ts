@@ -79,12 +79,17 @@ export interface WeatherParams {
 }
 
 export interface WeatherResult {
-  temperature: number;
-  conditions: string;
-  location: string;
-  humidity?: number;
-  windSpeed?: number;
-  unit: string;
+  id?: string;
+  success?: boolean;
+  error?: string;
+  data: {
+    temperature: number;
+    condition: string;
+    location: string;
+    humidity?: number;
+    windSpeed?: number;
+    unit: string;
+  }
 }
 
 export interface CalculatorParams {
@@ -121,6 +126,7 @@ export interface SearchResultItem extends Partial<SearchBase> {
   publishedDate?: string;
   type?: string;
   score?: number;
+  region?: string;
 }
 export interface SearchResult {
   id?: string;
