@@ -97,7 +97,7 @@ const App: React.FC = () => {
             }}>
               Available Tools
             </h3>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
                 { name: 'Weather', desc: 'Get weather information' },
