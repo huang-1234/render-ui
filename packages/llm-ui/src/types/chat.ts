@@ -8,18 +8,20 @@ export interface ChatMessage {
   isStreaming?: boolean;
   error?: boolean;
   toolCalls?: ToolCall[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ToolCall {
   id: string;
-  toolName: string;
-  params: any;
+  name: string;
+  params?: string;
+  arguments?: string;
   status: 'pending' | 'executing' | 'completed' | 'failed';
-  result?: any;
+  result?: unknown;
   error?: string;
   startTime: number;
   endTime?: number;
+  timestamp?: number;
 }
 
 export interface ChatMessageError {
@@ -65,7 +67,7 @@ export interface ChatActions {
   regenerateResponse: (messageId: string) => Promise<void>;
   stopGeneration: () => void;
   retryMessage: (messageId: string) => Promise<void>;
-  handleStreamResponse: (response: any) => Promise<void>;
+  handleStreamResponse: (response: unknown) => Promise<void>;
   handleToolCall: (toolCall: any) => Promise<void>;
 }
 

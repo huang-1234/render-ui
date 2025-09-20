@@ -27,7 +27,7 @@ describe('toolStore', () => {
 
   const mockToolCall: ToolCall = {
     id: 'tool-call-1',
-    toolName: 'test-tool',
+    name: 'test-tool',
     params: { input: 'test' },
     status: 'pending',
     startTime: Date.now(),

@@ -114,7 +114,7 @@ export const useToolStore = create<ToolStore>()(
 
         const toolCall: ToolCall = {
           id: callId,
-          toolName: name,
+          name: name,
           params,
           status: 'executing',
           startTime,

@@ -3,7 +3,7 @@ import { calculatorTool } from '../calculator';
 
 describe('calculatorTool', () => {
   it('should have correct tool metadata', () => {
-    expect(calculatorTool.id).toBe('calculator');
+    expect(calculatorTool.name).toBe('calculator');
     expect(calculatorTool.name).toBe('Calculator');
     expect(calculatorTool.description).toContain('mathematical calculations');
     expect(calculatorTool.category).toBe('utility');
@@ -192,7 +192,7 @@ describe('calculatorTool', () => {
   });
 
   it('should provide step-by-step calculation for complex expressions', async () => {
-    const result = await calculatorTool.execute({ 
+    const result = await calculatorTool.execute({
       expression: '(2 + 3) * 4',
       showSteps: true
     });
@@ -200,6 +200,6 @@ describe('calculatorTool', () => {
     expect(result.success).toBe(true);
     expect(result.result).toBe(20);
     expect(result.steps).toBeDefined();
-    expect(result.steps.length).toBeGreaterThan(0);
+    expect(result.steps?.length).toBeGreaterThan(0);
   });
 });

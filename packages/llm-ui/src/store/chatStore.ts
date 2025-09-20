@@ -163,12 +163,12 @@ export const useChatStore = create<ChatStore>()(
                   content: get().messages.find(m => m.id === assistantMessage.id)?.content + text || text
                 });
               },
-              onToolCall: (toolCall: any) => {
+              onToolCall: (toolCall: ToolCall) => {
                 // 处理工具调用
                 const newToolCall: ToolCall = {
                   id: toolCall.id,
-                  toolName: toolCall.name,
-                  params: JSON.parse(toolCall.arguments),
+                  name: toolCall.name,
+                  params:toolCall.params || toolCall.arguments || '{}',
                   status: 'pending',
                   startTime: Date.now(),
                 };
@@ -264,12 +264,12 @@ export const useChatStore = create<ChatStore>()(
                   content: get().messages.find(m => m.id === lastAssistantMessage.id)?.content + text || text
                 });
               },
-              onToolCall: (toolCall: any) => {
+              onToolCall: (toolCall: ToolCall) => {
                 // 处理工具调用
                 const newToolCall: ToolCall = {
                   id: toolCall.id,
-                  toolName: toolCall.name,
-                  params: JSON.parse(toolCall.arguments),
+                  name: toolCall.name,
+                  params: JSON.parse(toolCall.arguments || '{}'),
                   status: 'pending',
                   startTime: Date.now(),
                 };
@@ -292,7 +292,7 @@ export const useChatStore = create<ChatStore>()(
           }
         },
 
-        handleToolCall: async (toolCall: any) => {
+        handleToolCall: async (toolCall: ToolCall) => {
           const { setLoading, setError, addToolCall, updateToolCall } = get().actions;
 
           try {
@@ -302,9 +302,9 @@ export const useChatStore = create<ChatStore>()(
             const toolCallData: ToolCall = {
               id: toolCall.id || generateId(),
               name: toolCall.name!,
-              parameters: toolCall.parameters || toolCall.arguments,
+              params: toolCall.params || '',
               status: 'pending',
-              timestamp: Date.now()
+              startTime: Date.now()
             };
 
             addToolCall(toolCallData);
@@ -318,8 +318,8 @@ export const useChatStore = create<ChatStore>()(
             }
 
             // 执行工具
-            updateToolCall(toolCallData.id, { status: 'running' });
-            const result = await tool.execute(toolCallData.parameters);
+            updateToolCall(toolCallData.id, { status: 'executing' });
+            const result = await tool.execute(toolCallData.params);
 
             // 更新工具调用结果
             updateToolCall(toolCallData.id, {

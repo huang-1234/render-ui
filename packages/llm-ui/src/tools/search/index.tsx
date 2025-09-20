@@ -3,18 +3,18 @@ import { z } from 'zod';
 import { Tool, SearchParams, SearchResult } from '../../types/tool';
 
 // 搜索图标组件
-const SearchIcon: React.FC<{ size?: number; className?: string }> = ({ 
-  size = 24, 
-  className = '' 
+const SearchIcon: React.FC<{ size?: number; className?: string }> = ({
+  size = 24,
+  className = ''
 }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
     className={className}
   >
@@ -47,7 +47,7 @@ const SearchInputRenderer: React.FC<{
         }}
       />
     </div>
-    
+
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
       <div>
         <label style={{ display: 'block', marginBottom: '4px', fontWeight: 500 }}>
@@ -71,7 +71,7 @@ const SearchInputRenderer: React.FC<{
           <option value="videos">Videos</option>
         </select>
       </div>
-      
+
       <div>
         <label style={{ display: 'block', marginBottom: '4px', fontWeight: 500 }}>
           Limit:
@@ -124,14 +124,14 @@ const SearchResultRenderer: React.FC<{
         <SearchIcon size={20} />
         <strong style={{ fontSize: '16px' }}>Search Results</strong>
       </div>
-      
+
       <div style={{ marginBottom: '12px', fontSize: '14px', color: 'var(--lobe-agent-color-textSecondary)' }}>
         Found {result.total} results for "{result.query}"
       </div>
-      
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {result.results.map((item, index) => (
-          <div 
+          <div
             key={index}
             style={{
               padding: '12px',
@@ -141,7 +141,7 @@ const SearchResultRenderer: React.FC<{
             }}
           >
             <div style={{ marginBottom: '4px' }}>
-              <a 
+              <a
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -164,7 +164,7 @@ const SearchResultRenderer: React.FC<{
                 </span>
               )}
             </div>
-            
+
             <div style={{
               fontSize: '12px',
               color: 'var(--lobe-agent-color-success)',
@@ -172,7 +172,7 @@ const SearchResultRenderer: React.FC<{
             }}>
               {item.url}
             </div>
-            
+
             <div style={{
               fontSize: '13px',
               color: 'var(--lobe-agent-color-text)',
@@ -183,7 +183,7 @@ const SearchResultRenderer: React.FC<{
           </div>
         ))}
       </div>
-      
+
       {result.results.length === 0 && (
         <div style={{
           textAlign: 'center',
@@ -205,7 +205,7 @@ export const searchTool: Tool<SearchParams, SearchResult> = {
   category: 'information',
   tags: ['search', 'web', 'information', 'query'],
   version: '1.0.0',
-  
+
   parameters: z.object({
     query: z.string().min(1).describe('The search query string'),
     limit: z.number().min(1).max(50).optional().default(10).describe('Maximum number of results to return'),
@@ -254,7 +254,14 @@ export const searchTool: Tool<SearchParams, SearchResult> = {
 
       return mockResults;
     } catch (error: any) {
-      throw new Error(`Search failed: ${error.message}`);
+      // throw new Error(`Search failed: ${error.message}`);
+      return {
+        results: [],
+        total: 0,
+        success: false,
+        error: error.message,
+        query,
+      }
     }
   },
 };

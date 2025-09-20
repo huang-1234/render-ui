@@ -75,20 +75,20 @@ export const useTools = (options: UseToolsOptions = {}): UseToolsReturn => {
   ): Promise<ToolExecutionResult> => {
     try {
       onToolExecute?.(name, params);
-      
+
       const result = await actions.executeTool(name, params, context);
-      
+
       if (result.success) {
         onToolComplete?.(name, result.result);
       } else {
         onToolError?.(name, result.error || 'Unknown error');
       }
-      
+
       return result;
     } catch (error: any) {
       const errorDetails = errorHandler.handleError(error);
       onToolError?.(name, errorDetails.message);
-      
+
       return {
         success: false,
         error: errorDetails.message,
@@ -120,17 +120,17 @@ export const useTools = (options: UseToolsOptions = {}): UseToolsReturn => {
   // 检查工具是否启用
   const isToolEnabled = useCallback((toolName: string) => {
     const config = store.config;
-    
+
     // 检查是否在阻止列表中
     if (config.blockedTools?.includes(toolName)) {
       return false;
     }
-    
+
     // 检查是否在允许列表中（如果设置了允许列表）
     if (config.allowedTools && config.allowedTools.length > 0) {
       return config.allowedTools.includes(toolName);
     }
-    
+
     return true;
   }, [store.config]);
 
@@ -182,13 +182,13 @@ export const useToolExecution = (toolName: string) => {
 
     try {
       const executionResult = await executeTool(toolName, params, context);
-      
+
       if (executionResult.success) {
         setResult(executionResult.result);
       } else {
         setError(executionResult.error || 'Unknown error');
       }
-      
+
       return executionResult;
     } catch (err: any) {
       setError(err.message);
@@ -201,8 +201,8 @@ export const useToolExecution = (toolName: string) => {
   const cancel = useCallback(() => {
     // 找到正在执行的调用
     const executingCall = Array.from(executingCalls.values())
-      .find(call => call.toolName === toolName && call.status === 'executing');
-    
+      .find(call => call.name === toolName && call.status === 'executing');
+
     if (executingCall) {
       cancelExecution(executingCall.id);
       setIsExecuting(false);

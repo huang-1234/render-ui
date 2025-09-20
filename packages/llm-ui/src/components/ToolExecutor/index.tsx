@@ -189,7 +189,7 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
 
     try {
       const result = await actions.executeTool(
-        toolCall.toolName,
+        toolCall.name,
         toolCall.params,
         {
           abortSignal: new AbortController().signal,
@@ -200,13 +200,13 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
       setProgress(100);
 
       if (result.success) {
-        onComplete?.(toolCall.toolName, result.result);
+        onComplete?.(toolCall.name, result.result);
       } else {
-        onError?.(toolCall.toolName, result.error || 'Unknown error');
+        onError?.(toolCall.name, result.error || 'Unknown error');
       }
     } catch (error: any) {
       clearInterval(progressInterval);
-      onError?.(toolCall.toolName, error.message);
+      onError?.(toolCall.name, error.message);
     } finally {
       setIsExecuting(false);
     }
@@ -223,7 +223,7 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
     return toolCall.endTime - toolCall.startTime;
   };
 
-  const tool = actions.getTool(toolCall.toolName);
+  const tool = actions.getTool(toolCall.name);
 
   return (
     <ToolContainer status={toolCall.status}>
@@ -237,7 +237,7 @@ export const ToolExecutor: React.FC<ToolExecutorProps> = ({
             )}
           </ToolIcon>
           <div>
-            <ToolName>{tool?.name || toolCall.toolName}</ToolName>
+            <ToolName>{tool?.name || toolCall.name}</ToolName>
             <ToolStatus status={toolCall.status}>
               {toolCall.status}
               {getDuration() && (

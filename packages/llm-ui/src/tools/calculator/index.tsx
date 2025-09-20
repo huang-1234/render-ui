@@ -3,18 +3,18 @@ import { z } from 'zod';
 import { Tool, CalculatorParams, CalculatorResult } from '../../types/tool';
 
 // 计算器图标组件
-const CalculatorIcon: React.FC<{ size?: number; className?: string }> = ({ 
-  size = 24, 
-  className = '' 
+const CalculatorIcon: React.FC<{ size?: number; className?: string }> = ({
+  size = 24,
+  className = ''
 }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
     className={className}
   >
@@ -89,26 +89,26 @@ const CalculatorResultRenderer: React.FC<{
         <CalculatorIcon size={20} />
         <strong style={{ fontSize: '16px' }}>Calculation Result</strong>
       </div>
-      
+
       <div style={{ fontFamily: 'monospace', fontSize: '14px' }}>
         <div style={{ marginBottom: '8px' }}>
           <span style={{ color: 'var(--lobe-agent-color-textSecondary)' }}>Expression: </span>
           <span>{result.expression}</span>
         </div>
-        
-        <div style={{ 
-          fontSize: '20px', 
-          fontWeight: 'bold', 
+
+        <div style={{
+          fontSize: '20px',
+          fontWeight: 'bold',
           color: 'var(--lobe-agent-color-primary)',
           marginBottom: '12px'
         }}>
           = {result.result}
         </div>
-        
+
         {result.steps && result.steps.length > 0 && (
           <div>
-            <div style={{ 
-              fontSize: '12px', 
+            <div style={{
+              fontSize: '12px',
               color: 'var(--lobe-agent-color-textSecondary)',
               marginBottom: '4px'
             }}>
@@ -129,10 +129,10 @@ const CalculatorResultRenderer: React.FC<{
 };
 
 // 安全的数学表达式求值函数
-const evaluateExpression = (expression: string): { result: number; steps: string[] } => {
+const evaluateExpression = (expression: string): { result?: number; steps: string[] } => {
   // 清理表达式
   const cleanExpression = expression.replace(/\s+/g, '');
-  
+
   // 基本的安全检查
   const allowedChars = /^[0-9+\-*/().^%a-z,\s]+$/i;
   if (!allowedChars.test(cleanExpression)) {
@@ -152,7 +152,7 @@ const evaluateExpression = (expression: string): { result: number; steps: string
   try {
     // 使用 Function 构造器进行安全求值
     const result = new Function('Math', `"use strict"; return (${processedExpression})`)(Math);
-    
+
     if (typeof result !== 'number' || !isFinite(result)) {
       throw new Error('Invalid calculation result');
     }
@@ -177,7 +177,7 @@ export const calculatorTool: Tool<CalculatorParams, CalculatorResult> = {
   category: 'utility',
   tags: ['math', 'calculation', 'arithmetic'],
   version: '1.0.0',
-  
+
   parameters: z.object({
     expression: z.string().min(1).describe('Mathematical expression to evaluate'),
   }),
@@ -199,9 +199,16 @@ export const calculatorTool: Tool<CalculatorParams, CalculatorResult> = {
         result,
         expression,
         steps,
+        success: true,
       };
     } catch (error: any) {
-      throw new Error(`Calculator error: ${error.message}`);
+      return {
+        result: undefined,
+        expression,
+        steps: [],
+        success: false,
+        error: error.message,
+      };
     }
   },
 };

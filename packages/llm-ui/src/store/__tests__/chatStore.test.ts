@@ -145,7 +145,7 @@ describe('chatStore', () => {
 
   it('should submit a message', async () => {
     const { actions } = useChatStore.getState();
-    
+
     // Mock fetch
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -162,7 +162,7 @@ describe('chatStore', () => {
     const { actions } = useChatStore.getState();
     const toolCall: ToolCall = {
       id: 'tool-call-1',
-      toolName: 'test-tool',
+      name: 'test-tool',
       params: { input: 'test' },
       status: 'pending',
       startTime: Date.now(),
@@ -176,7 +176,7 @@ describe('chatStore', () => {
 
   it('should stop generation', () => {
     const { actions } = useChatStore.getState();
-    
+
     // Mock AbortController
     const mockAbort = vi.fn();
     useChatStore.setState({
@@ -215,7 +215,7 @@ describe('chatStore', () => {
     const { actions } = useChatStore.getState();
     const toolCall: ToolCall = {
       id: 'tool-call-1',
-      toolName: 'get_weather',
+      name: 'get_weather',
       params: { location: 'New York' },
       status: 'pending',
       startTime: Date.now(),
@@ -240,7 +240,7 @@ describe('chatStore', () => {
     const { actions } = useChatStore.getState();
     const toolCall: ToolCall = {
       id: 'tool-call-1',
-      toolName: 'get_weather',
+      name: 'get_weather',
       params: { location: 'New York' },
       status: 'pending',
       startTime: Date.now(),
@@ -249,7 +249,7 @@ describe('chatStore', () => {
     actions.addToolCall(toolCall);
 
     // Update tool call status
-    actions.updateToolCall('tool-call-1', { 
+    actions.updateToolCall('tool-call-1', {
       status: 'completed',
       result: 'Sunny, 25°C',
       endTime: Date.now()
@@ -298,7 +298,7 @@ describe('chatStore', () => {
 
   it('should regenerate response', async () => {
     const { actions } = useChatStore.getState();
-    
+
     // Add user message
     const userMessage: ChatMessage = {
       id: 'user-1',
@@ -306,7 +306,7 @@ describe('chatStore', () => {
       role: 'user',
       timestamp: Date.now(),
     };
-    
+
     // Add assistant message
     const assistantMessage: ChatMessage = {
       id: 'assistant-1',
