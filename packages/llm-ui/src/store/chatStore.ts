@@ -239,6 +239,103 @@ export const useChatStore = create<ChatStore>()(
             });
           });
         },
+
+        handleStreamResponse: async (response: any) => {
+          const { updateMessage, setError } = get().actions;
+
+          try {
+            if (!response.body) {
+              throw new Error('Response body is null');
+            }
+
+            // 找到最后一个助理消息（应该是正在流式传输的消息）
+            const lastAssistantMessage = get().messages
+              .filter(m => m.role === 'assistant')
+              .pop();
+
+            if (!lastAssistantMessage) {
+              throw new Error('No assistant message found to update');
+            }
+
+            // 处理流式响应
+            await processStream(response.body, {
+              onText: (text: string) => {
+                updateMessage(lastAssistantMessage.id, {
+                  content: get().messages.find(m => m.id === lastAssistantMessage.id)?.content + text || text
+                });
+              },
+              onToolCall: (toolCall: any) => {
+                // 处理工具调用
+                const newToolCall: ToolCall = {
+                  id: toolCall.id,
+                  toolName: toolCall.name,
+                  params: JSON.parse(toolCall.arguments),
+                  status: 'pending',
+                  startTime: Date.now(),
+                };
+                get().actions.addToolCall(newToolCall);
+              },
+              onComplete: () => {
+                updateMessage(lastAssistantMessage.id, { isStreaming: false });
+              },
+              onError: (error) => {
+                setError({ message: error.message, messageId: lastAssistantMessage.id });
+                updateMessage(lastAssistantMessage.id, { isStreaming: false, error: true });
+              }
+            });
+
+          } catch (error: any) {
+            setError({
+              message: error.message,
+              retryable: true
+            });
+          }
+        },
+
+        handleToolCall: async (toolCall: any) => {
+          const { setLoading, setError, addToolCall, updateToolCall } = get().actions;
+
+          try {
+            setLoading(true);
+
+            // 添加工具调用到状态
+            const toolCallData: ToolCall = {
+              id: toolCall.id || generateId(),
+              name: toolCall.name!,
+              parameters: toolCall.parameters || toolCall.arguments,
+              status: 'pending',
+              timestamp: Date.now()
+            };
+
+            addToolCall(toolCallData);
+
+            // 获取可用工具
+            const availableTools = getAvailableTools();
+            const tool = availableTools.find(t => t.name === toolCall.name);
+
+            if (!tool) {
+              throw new Error(`Tool ${toolCall.name} not found`);
+            }
+
+            // 执行工具
+            updateToolCall(toolCallData.id, { status: 'running' });
+            const result = await tool.execute(toolCallData.parameters);
+
+            // 更新工具调用结果
+            updateToolCall(toolCallData.id, {
+              status: 'completed',
+              result: result
+            });
+
+          } catch (error: any) {
+            setError({
+              message: `Tool execution failed: ${error.message}`,
+              retryable: true
+            });
+          } finally {
+            setLoading(false);
+          }
+        },
       }
     })),
     {

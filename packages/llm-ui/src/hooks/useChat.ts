@@ -26,6 +26,9 @@ export interface UseChatReturn {
   deleteMessage: (messageId: string) => void;
   updateMessage: (messageId: string, update: Partial<ChatMessage>) => void;
   setConfig: (config: Partial<ChatConfig>) => void;
+  handleStreamResponse: (response: any) => Promise<void>;
+  handleToolCall: (toolCall: any) => Promise<void>;
+  getMessageById: (messageId: string) => ChatMessage | undefined;
 }
 
 export const useChat = (options: UseChatOptions = {}): UseChatReturn => {
@@ -143,6 +146,32 @@ export const useChat = (options: UseChatOptions = {}): UseChatReturn => {
     actions.setConfig(newConfig);
   }, [actions]);
 
+  // 处理流式响应
+  const handleStreamResponse = useCallback(async (response: any) => {
+    try {
+      await actions.handleStreamResponse(response);
+    } catch (err) {
+      const errorDetails = errorHandler.handleError(err as Error);
+      onError?.(new Error(errorDetails.message));
+    }
+  }, [actions, onError]);
+
+  // 处理工具调用
+  const handleToolCall = useCallback(async (toolCall: any) => {
+    try {
+      await actions.handleToolCall(toolCall);
+      onToolCall?.(toolCall.name, toolCall.parameters);
+    } catch (err) {
+      const errorDetails = errorHandler.handleError(err as Error);
+      onError?.(new Error(errorDetails.message));
+    }
+  }, [actions, onToolCall, onError]);
+
+  // 根据ID获取消息
+  const getMessageById = useCallback((messageId: string) => {
+    return messages.find(message => message.id === messageId);
+  }, [messages]);
+
   return {
     messages,
     isLoading,
@@ -155,7 +184,10 @@ export const useChat = (options: UseChatOptions = {}): UseChatReturn => {
     deleteMessage,
     updateMessage,
     setConfig,
-  };
+    handleStreamResponse,
+    handleToolCall,
+    getMessageById,
+  }
 };
 
 // 简化版聊天钩子

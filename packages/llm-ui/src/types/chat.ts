@@ -65,6 +65,8 @@ export interface ChatActions {
   regenerateResponse: (messageId: string) => Promise<void>;
   stopGeneration: () => void;
   retryMessage: (messageId: string) => Promise<void>;
+  handleStreamResponse: (response: any) => Promise<void>;
+  handleToolCall: (toolCall: any) => Promise<void>;
 }
 
 export interface StreamProcessorOptions {
