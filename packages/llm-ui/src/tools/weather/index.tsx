@@ -3,18 +3,18 @@ import { z } from 'zod';
 import { Tool, WeatherParams, WeatherResult } from '../../types/tool';
 
 // 天气图标组件
-const WeatherIcon: React.FC<{ size?: number; className?: string }> = ({ 
-  size = 24, 
-  className = '' 
+const WeatherIcon: React.FC<{ size?: number; className?: string }> = ({
+  size = 24,
+  className = ''
 }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
     className={className}
   >
@@ -86,6 +86,7 @@ const WeatherResultRenderer: React.FC<{
       </div>
     );
   }
+  const { data } = result || {};
 
   return (
     <div style={{
@@ -96,26 +97,26 @@ const WeatherResultRenderer: React.FC<{
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
         <WeatherIcon size={20} />
-        <strong style={{ fontSize: '16px' }}>Weather in {result.location}</strong>
+        <strong style={{ fontSize: '16px' }}>Weather in {data.location}</strong>
       </div>
-      
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <div>
           <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--lobe-agent-color-primary)' }}>
-            {result.temperature}°{result.unit === 'fahrenheit' ? 'F' : 'C'}
+            {data.temperature}°{data.unit === 'fahrenheit' ? 'F' : 'C'}
           </div>
           <div style={{ fontSize: '14px', color: 'var(--lobe-agent-color-textSecondary)' }}>
-            {result.conditions}
+            {data.condition}
           </div>
         </div>
-        
-        {(result.humidity !== undefined || result.windSpeed !== undefined) && (
+
+        {(data.humidity !== undefined || data.windSpeed !== undefined) && (
           <div style={{ fontSize: '14px' }}>
-            {result.humidity !== undefined && (
-              <div>Humidity: {result.humidity}%</div>
+            {data.humidity !== undefined && (
+              <div>Humidity: {data.humidity}%</div>
             )}
-            {result.windSpeed !== undefined && (
-              <div>Wind: {result.windSpeed} km/h</div>
+            {data.windSpeed !== undefined && (
+              <div>Wind: {data.windSpeed} km/h</div>
             )}
           </div>
         )}
@@ -131,7 +132,7 @@ export const weatherTool: Tool<WeatherParams, WeatherResult> = {
   category: 'utility',
   tags: ['weather', 'location', 'temperature'],
   version: '1.0.0',
-  
+
   parameters: z.object({
     location: z.string().min(1).describe('The city and state/country, e.g. "San Francisco, CA" or "London, UK"'),
     unit: z.enum(['celsius', 'fahrenheit']).optional().default('celsius').describe('Temperature unit'),
@@ -154,12 +155,15 @@ export const weatherTool: Tool<WeatherParams, WeatherResult> = {
 
       // 模拟天气数据
       const mockWeatherData: WeatherResult = {
-        temperature: unit === 'fahrenheit' ? 72 : 22,
-        conditions: 'Partly cloudy',
-        location: location,
-        humidity: 65,
-        windSpeed: 12,
-        unit: unit,
+        data: {
+          temperature: unit === 'fahrenheit' ? 72 : 22,
+          condition: 'Partly cloudy',
+          location: location,
+          humidity: 65,
+          windSpeed: 12,
+          unit: unit,
+        },
+        success: true,
       };
 
       return mockWeatherData;
