@@ -3,7 +3,7 @@ import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ChatWindow } from '../components/ChatWindow';
-import { ThemeProvider } from '../theme/ThemeProvider';
+import { ThemeProvider } from '../components/ThemeProvider';
 import { render } from './utils';
 
 // Integration tests for the complete LLM UI system
